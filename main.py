@@ -21,8 +21,5 @@ def Generation_personnes(n):
             retour.append(["Eau"])
         else:
             retour.append(["Reste"])
-            
+
     return retour
-
-
-
