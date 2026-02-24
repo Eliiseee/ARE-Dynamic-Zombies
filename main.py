@@ -5,12 +5,11 @@ def Generation_personnes(n):
     proba_medecin = 0.15
     proba_agriculteur = 0.3
     proba_eau = 0.3
-    proba_reste = 0.1
 
     retour = []
 
     for i in range(n):
-        p = random.random()
+        p =random()
         if p < proba_soldat:
             retour.append(["Soldat"])
         elif p < proba_soldat + proba_medecin:
