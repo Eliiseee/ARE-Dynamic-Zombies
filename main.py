@@ -54,7 +54,7 @@ def get_coords(population):
     while True:
         coord = (
             random.randint(0, x_max - 1),
-            random.randint(0, y_max - 1)
+            random.randint(0, y_max - 1) 
         )
         if coord not in coords_existantes:
             return coord
