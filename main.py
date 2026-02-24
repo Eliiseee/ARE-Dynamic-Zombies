@@ -5,7 +5,7 @@ def Generation_personnes(n):
     proba_medecin = 0.15
     proba_agriculteur = 0.3
     proba_eau = 0.3
-    # proba_reste = 0.1
+    # proba_reste = 0.1 #pas necessaire
 
     retour = []
 
