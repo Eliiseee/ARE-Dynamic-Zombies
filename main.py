@@ -1,6 +1,5 @@
-from random import random
+import random
 import uuid
-
 
 # probas metiers
 
@@ -26,43 +25,62 @@ largeur = 10
 longeur = 10
 
 
-def Generation_personnes(n):
-    retour = []
-
-    for i in range(n):
-        p = random.random()
-        if p < PROBA_SOLDAT:
-            retour.append(gen_person("Soldat"))
-        elif p < PROBA_SOLDAT + PROBA_MEDECIN:
-            retour.append(gen_person("Medecin"))
-        elif p < PROBA_SOLDAT + PROBA_MEDECIN + PROBA_AGRO:
-            retour.append(gen_person("Agriculteur"))
-        elif p < PROBA_SOLDAT + PROBA_MEDECIN + PROBA_AGRO + PROBA_EAU:
-            retour.append(gen_person("Eau"))
-        else:
-            retour.append(gen_person("Reste"))
-
-    return retour
-
+def get_role():
+    p = random.random()
+    if p < PROBA_SOLDAT:
+        return "Soldat"
+    elif p < PROBA_SOLDAT + PROBA_MEDECIN:
+        return "Medecin"
+    elif p < PROBA_SOLDAT + PROBA_MEDECIN + PROBA_AGRO:
+        return "Agriculteur"
+    elif p < PROBA_SOLDAT + PROBA_MEDECIN + PROBA_AGRO + PROBA_EAU:
+        return "Eau"
+    else:
+        return "Reste"
 
 # renvoie la taille de notre grille
+
+def round_3(n):
+    return round(n,3)
 
 def get_grid_taille():
     return (longeur, largeur)
 
+def get_coords(population):
+    x_max, y_max = get_grid_taille()
 
-def gen_person(role):
+    coords_existantes = {person[COORD] for person in population}
+
+    while True:
+        coord = (
+            random.randint(0, x_max - 1),
+            random.randint(0, y_max - 1)
+        )
+        if coord not in coords_existantes:
+            return coord
+
+
+def Generation_personnes(nb):
     # personne : identifiant, is_alive, altruisme, role, (x,y), danger, is_in_groupe
 
-    x_max, y_max = get_grid_taille()
-    personne = []
-    personne[ID] = uuid.uuid1()
-    personne[IS_ALIVE] = True
-    personne[ALRTRUISME] = random.random()
-    personne[ROLE] = role
-    personne[COORD] = (random.randint(x_max),random.randint(y_max))
-    personne[DANGER] = random.random()
-    personne[IS_IN_GROUPE] = random.random()
+    civilisation = []
+
+    for _ in range(nb):
+        personne = [0] * 7
+
+        personne[ID] = uuid.uuid1()
+        personne[IS_ALIVE] = True
+        personne[ALRTRUISME] = round_3(random.random())
+        personne[ROLE] = get_role()
+        personne[COORD] = get_coords(civilisation)
+        personne[DANGER] = round_3(random.random())
+        personne[IS_IN_GROUPE] = round_3(random.random())
+
+        
+
+        civilisation.append(personne)
+
+    return civilisation
 
 
 
