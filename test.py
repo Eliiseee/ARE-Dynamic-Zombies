@@ -1,6 +1,6 @@
 from main import Generation_personnes
 
-test = Generation_personnes(10)
+test = Generation_personnes(100)
 
 def afficher_population(population):
     # En-tête
