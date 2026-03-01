@@ -32,7 +32,7 @@ def afficher_population(population):
             person[3],                      # Role
             str(person[4]),                 # Coord
             f"{person[5]:.2f}",             # Danger
-            f"{person[6]:}"              # InGroup
+            f"{person[6]:}"                 # InGroup
         ]
 
         for value, width in zip(row, widths):
