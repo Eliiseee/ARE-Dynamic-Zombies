@@ -12,11 +12,13 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 La fonction prendra en argument une civilisation et nous renvera une grille 2D qui sera notre environnement. Pour l'instant on ne s'occupe pas de rajouter des ressources sur cette grille et on ne gère pas les déplacement de chacun. 
 
- 1) Faire en sorte que dans chaque case il n'y ai une unique personne (grâce à son id par exemple ou en connaissant en permanance la position de chacun des habitants).
+ 1) Faire en sorte que dans chaque case il n'y ai une unique personne (grâce à son id par exemple ou en connaissant en permanance la position de chacun des habitants). -> DONE
 
- 2) Faire en sorte que plusieurs personnes objectivement proches puissent se rejoindre géographiquement et former un cercle autour d'un centre (ce qui serait le plus logique).
+ 2) Faire en sorte que plusieurs personnes objectivement proches puissent se rejoindre géographiquement et former un cercle autour d'un centre (ce qui serait le plus logique). -> DONE
 
- 3) Création de groupe et d'un ID pour chaque groupe, à partir de maintenant on essaiera d'identifier le groupe entier à la place d'un individu.
+ 3) Création de groupe et d'un ID pour chaque groupe, à partir de maintenant on essaiera d'identifier le groupe entier à la place d'un individu. -> DONE
 
- 4) Création de plein de petit groupes de zombie proportionnel à la taille de la population. 
+ 4) Fonction d'affichage pour les groupes et les individus sous format ASCII afin de vérifier le bon fonctionnement de nos fonctions. -> DONE
+
+ 5) Création de plein de petit groupes de zombie proportionnel à la taille de la population. -> A faire
 

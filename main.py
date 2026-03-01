@@ -78,7 +78,7 @@ def Generation_personnes(nb):
         personne[ROLE] = get_role()
         personne[COORD] = get_next_coord(coordonées)
         personne[DANGER] = round_2(random.random())
-        personne[IS_IN_GROUPE] = -1
+        personne[IS_IN_GROUPE] = 0
         
 
 
@@ -86,4 +86,54 @@ def Generation_personnes(nb):
 
     return civilisation
 
+def fusionner_groupes(civilisation):
+    directions = [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]
+    coord_map = {person[COORD]: person for person in civilisation}
+    changed = True
 
+    while changed:
+        changed = False
+
+        for person in civilisation:
+            if person[IS_IN_GROUPE] <= 0:
+                continue 
+            x, y = person[COORD]
+            voisins = [coord_map.get((x+dx, y+dy)) for dx, dy in directions if coord_map.get((x+dx, y+dy))]
+            groupes_voisins = [v[IS_IN_GROUPE] for v in voisins if v[IS_IN_GROUPE] > 0]
+
+            if groupes_voisins:
+                min_groupe = min(groupes_voisins + [person[IS_IN_GROUPE]])
+                if person[IS_IN_GROUPE] != min_groupe:
+                    person[IS_IN_GROUPE] = min_groupe
+                    changed = True
+
+                for v in voisins:
+                    if v[IS_IN_GROUPE] > 0 and v[IS_IN_GROUPE] != min_groupe:
+                        v[IS_IN_GROUPE] = min_groupe
+                        changed = True
+
+def groupement(civilisation):
+    directions = [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]
+    
+    coord_map = {person[COORD]: person for person in civilisation}
+    groupe_id = 1
+
+    for person in civilisation:
+        x, y = person[COORD]
+
+        voisins = [coord_map.get((x+dx, y+dy)) for dx, dy in directions if coord_map.get((x+dx, y+dy))]
+
+        if not voisins:
+            person[IS_IN_GROUPE] = -1
+            continue
+
+        groupes_voisins = [v[IS_IN_GROUPE] for v in voisins if v[IS_IN_GROUPE] > 0]
+
+        if groupes_voisins:
+            min_groupe = min(groupes_voisins)
+            person[IS_IN_GROUPE] = min_groupe
+        else:
+            person[IS_IN_GROUPE] = groupe_id
+            groupe_id += 1
+
+    fusionner_groupes(civilisation)
