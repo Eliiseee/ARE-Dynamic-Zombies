@@ -1,4 +1,4 @@
-from main import Generation_personnes
+from main import *
 
 test = Generation_personnes(100)
 
