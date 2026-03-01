@@ -14,7 +14,7 @@ PROBA_EAU = 0.3
 
 ID = 0
 IS_ALIVE = 1
-ALRTRUISME = 2
+ALTRUISME = 2
 ROLE = 3
 COORD = 4
 DANGER = 5
@@ -22,8 +22,8 @@ IS_IN_GROUPE = 6
 
 # autres constantes
 
-largeur = 10
-longeur = 10
+LARGEUR = 10
+LONGUEUR = 10
 
 
 def get_role():
@@ -45,24 +45,27 @@ def round_3(n):
     return round(n,3)
 
 def get_grid_taille():
-    return (longeur, largeur)
+    return (LONGUEUR, LARGEUR)
 
-def get_coords(population):
-    x_max, y_max = get_grid_taille()
+def init_coords_libres():
 
-    coords_existantes = {person[COORD] for person in population}
+    coords_libres = [(x,y) for x in range(LONGUEUR) for y in range(LARGEUR)]
+    random.shuffle(coords_libres)
+    return coords_libres
 
-    while True:
-        coord = (
-            random.randint(0, x_max - 1),
-            random.randint(0, y_max - 1) 
-        )
-        if coord not in coords_existantes:
-            return coord
+def get_next_coord(coord_libres):
+
+    if not coord_libres:
+        raise ValueError("Trop de personnes et pas assez de coordonnées")
+    return coord_libres.pop()
+
 
 
 def Generation_personnes(nb):
     # personne : identifiant, is_alive, altruisme, role, (x,y), danger, is_in_groupe
+
+    coordonées = init_coords_libres()
+
 
     civilisation = []
 
@@ -71,17 +74,16 @@ def Generation_personnes(nb):
 
         personne[ID] = uuid.uuid1()
         personne[IS_ALIVE] = True
-        personne[ALRTRUISME] = round_3(random.random())
+        personne[ALTRUISME] = round_3(random.random())
         personne[ROLE] = get_role()
-        personne[COORD] = get_coords(civilisation)
+        personne[COORD] = get_next_coord(coordonées)
         personne[DANGER] = round_3(random.random())
         personne[IS_IN_GROUPE] = round_3(random.random())
-
         
+
 
         civilisation.append(personne)
 
     return civilisation
-
 
 
