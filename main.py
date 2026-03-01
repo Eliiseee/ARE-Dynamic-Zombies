@@ -78,7 +78,7 @@ def Generation_personnes(nb):
         personne[ROLE] = get_role()
         personne[COORD] = get_next_coord(coordonées)
         personne[DANGER] = round_2(random.random())
-        personne[IS_IN_GROUPE] = 0
+        personne[IS_IN_GROUPE] = -1
         
 
 
