@@ -74,7 +74,7 @@ def afficher_groupes(population):
     print()
     print("-" * sum(widths))
 
-    # Affichage avec saut de ligne à chaque changement de groupe
+
     groupe_courant = None
     for person in population_triee:
         if person[IS_IN_GROUPE] != groupe_courant:
