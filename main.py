@@ -1,5 +1,6 @@
 import random
 import uuid
+import numpy as np
 
 # probas metiers
 
