@@ -18,5 +18,5 @@ La fonction prendra en argument une civilisation et nous renvera une grille 2D q
 
  3) Création de groupe et d'un ID pour chaque groupe, à partir de maintenant on essaiera d'identifier le groupe entier à la place d'un individu.
 
- 4) Création de petit groupe de plein de petit groupes de zombie proportionnel à la taille de la population. 
+ 4) Création de plein de petit groupes de zombie proportionnel à la taille de la population. 
 
