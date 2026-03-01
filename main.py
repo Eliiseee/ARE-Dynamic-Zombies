@@ -41,8 +41,8 @@ def get_role():
 
 # renvoie la taille de notre grille
 
-def round_3(n):
-    return round(n,3)
+def round_2(n):
+    return round(n,2)
 
 def get_grid_taille():
     return (LONGUEUR, LARGEUR)
@@ -74,11 +74,11 @@ def Generation_personnes(nb):
 
         personne[ID] = uuid.uuid1()
         personne[IS_ALIVE] = True
-        personne[ALTRUISME] = round_3(random.random())
+        personne[ALTRUISME] = round_2(random.random())
         personne[ROLE] = get_role()
         personne[COORD] = get_next_coord(coordonées)
-        personne[DANGER] = round_3(random.random())
-        personne[IS_IN_GROUPE] = round_3(random.random())
+        personne[DANGER] = round_2(random.random())
+        personne[IS_IN_GROUPE] = -1
         
 
 
