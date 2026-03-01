@@ -28,11 +28,11 @@ def afficher_population(population):
         row = [
             str(person[0]),                 # UUID
             str(person[1]),                 # Alive
-            f"{person[2]:.3f}",             # Altruisme
+            f"{person[2]:.2f}",             # Altruisme
             person[3],                      # Role
             str(person[4]),                 # Coord
-            f"{person[5]:.3f}",             # Danger
-            f"{person[6]:.3f}"              # InGroup
+            f"{person[5]:.2f}",             # Danger
+            f"{person[6]:}"              # InGroup
         ]
 
         for value, width in zip(row, widths):
