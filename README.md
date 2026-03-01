@@ -8,10 +8,8 @@
 
 La fonction prendra en argument un nombre d'individus et renvoie une liste avec tout ces individus. Je pense qu'il serait meilleur que chaque individu soit une liste. (exemple soldat, medecin etc...) -> DONE 
 
-# 2. Créer une fonction qui permet de générer une grille 2D et de regrouper plusieurs personnes de manières logique.
-
-La fonction prendra en argument une civilisation et nous renvera une grille 2D qui sera notre environnement. Pour l'instant on ne s'occupe pas de rajouter des ressources sur cette grille et on ne gère pas les déplacement de chacun. 
-
+# 2. Création de groupes de manières logique. (Premier groupe avec voisins puis fusions de groupes)
+ 
  1) Faire en sorte que dans chaque case il n'y ai une unique personne (grâce à son id par exemple ou en connaissant en permanance la position de chacun des habitants). -> DONE
 
  2) Faire en sorte que plusieurs personnes objectivement proches puissent se rejoindre géographiquement et former un cercle autour d'un centre (ce qui serait le plus logique). -> DONE
@@ -21,4 +19,5 @@ La fonction prendra en argument une civilisation et nous renvera une grille 2D q
  4) Fonction d'affichage pour les groupes et les individus sous format ASCII afin de vérifier le bon fonctionnement de nos fonctions. -> DONE
 
  5) Création de plein de petit groupes de zombie proportionnel à la taille de la population. -> A faire
+
 
