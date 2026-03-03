@@ -114,5 +114,7 @@ def dessiner_population(population):
     for y in range(LONGUEUR):
         ligne = " ".join(grille[y])
         print(ligne)
+    
+    print()
 
 dessiner_population(test)
