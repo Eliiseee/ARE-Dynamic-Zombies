@@ -2,6 +2,9 @@ from main import *
 
 test = Generation_personnes(100)
 
+groupement(test)
+
+
 def afficher_population(population):
     # En-tête
     headers = [
@@ -119,8 +122,6 @@ def moyenne_groupe(test):
     somme = sum(compte.values())
     nb_groupes = len(compte)
     return somme / nb_groupes
-
-groupement(test)
 
 afficher_groupes(test)
 

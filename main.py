@@ -34,6 +34,17 @@ LONGUEUR = 22
 
 
 def get_role():
+    """
+    Fonction qui ne prend rien en argument.
+    Renvoie un string correspondant à un métier.
+
+    Les métiers disponibles :
+    "Soldat"
+    "Medecin"
+    "Agriculteur"
+    "Eau"
+    "Reste", ce qui correspond au reste de la population ayant un métier différent ignoré ici.
+    """
     p = random.random()
     if p < PROBA_SOLDAT:
         return "Soldat"
@@ -49,18 +60,40 @@ def get_role():
 # renvoie la taille de notre grille
 
 def round_2(n):
+    """
+    Fonction qui prend en argument un entier n.
+    Renvoie un ce nombre n arrondi à 2 chiffres après la virgule.
+    """
     return round(n,2)
 
 def get_grid_taille():
+    """
+    Fonction qui ne prend rien en argument.
+    Renvoie la taille de la grille sous forme d'un tuple.
+
+    Le tuple est de la forme suivante:
+    (LONGUEUR, LARGEUR)
+    """
     return (LONGUEUR, LARGEUR)
 
 def init_coords_libres():
+    """
+    Fonction qui ne prend rien en argument.
+    Fonction qui permet de générer une liste de tuple de toutes les coordonées possibles de la grille de manière aléatoires.
 
+    Exemple :
+
+    [(0,1), (1,1), (5,2), ...]
+    """
     coords_libres = [(x,y) for x in range(LONGUEUR) for y in range(LARGEUR)]
     random.shuffle(coords_libres)
     return coords_libres
 
 def get_next_coord(coord_libres):
+    """
+    Fonction qui prend en argument une pile de coordonées libres fournie de la fonction init_coords_libres().
+    Renvoie une coordonées libre et supprime cette coordonée de la pile.
+    """
 
     if not coord_libres:
         raise ValueError("Trop de personnes et pas assez de coordonnées")
@@ -128,6 +161,19 @@ def group_info(civilisation):
 
 
 def Generation_personnes(nb):
+    """
+    Fonction qui prend en argument un nombre de personne à générer dans la grille.
+    Renvoie une liste de nb personnes sous la forme d'une liste.
+
+    Chaque personne est une liste de 7 argument différents.
+    /!\ Par défaut IS_IN_GROUPE = -1 /!\ 
+
+    [ID, IS_ALIVE, ALTRUISME, ROLE, COORD, DANGER, IS_IN_GROUPE]
+
+    Exemple : 
+
+    [[1, True, 0.26, Reste, (5, 0), 0.53, 1], [2, True, 0.81, Soldat, (3, 2), 0.56, 1]
+    """
     # personne : identifiant, is_alive, altruisme, role, (x,y), danger, is_in_groupe
 
     coordonées = init_coords_libres()
@@ -151,6 +197,14 @@ def Generation_personnes(nb):
 
 
 def comptage_groupe(civilisation):
+    """
+    Fonction qui prend en argument une civilisation.
+    Renvoie un dictionnaire avec le numéro de groupe et le nombre de personne dans ce dernier.
+
+    Exemple :
+
+    {1: 16, 2: 16, 3: 18, 4: 16, 9: 9, 8: 16, 11: 8, 5: 1}
+    """
     compte = {}
     for person in civilisation:
         if person[IS_IN_GROUPE] in compte: 
@@ -162,7 +216,17 @@ def comptage_groupe(civilisation):
 
 def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_groupes = 3):
     """
-    Je (Omar) rajouterais une docstring plus tard
+    Fonction qui prend forcément en argument une civilisation
+    Fonction qui permet de rassembler plusieurs petits groupes afin d'en créer un plus gros.
+    Ne renvoie rien. 
+    
+    Prend 3 arguments facultatifs :
+
+    n : Nombre entier qui représente le rayon de nos recherches pour directions.
+    limite : Nombre entier qui représente le nombre max de personnes dans un même groupe (afin d'éviter d'en avoir un très gros monopolisant tout).
+    seuil_petits groupes : Nombre entier qui représente notre tolérance face à des petits groupes même si la limite est dépasssée (afin d'éviter au maximum les personnes totalement isolées)
+    
+    /!\ On modifie directement les valeurs dans la variable civilisation.
     """
 
     compte = comptage_groupe(civilisation)
@@ -205,6 +269,18 @@ def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_g
 
 
 def groupement(civilisation, n = 2):
+    """
+    Fonction qui prend forcément en argument une civilisation
+    Fonction qui permet de créer de petits groupes dans les alentours de n cases.
+
+    Argument facultatif :
+    
+    n : Nombre entier qui représente le rayon de nos recherches pour directions.
+
+    On utilise la fonction fusionner_groupes_proches_n afin de générer des groupes plus gros.
+
+    /!\ On modifie directement les valeurs dans la variable civilisation.
+    """
     directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1)]
     
     coord_map = {person[COORD]: person for person in civilisation}
