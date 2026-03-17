@@ -223,7 +223,9 @@ def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_g
     Prend 3 arguments facultatifs :
 
     n : Nombre entier qui représente le rayon de nos recherches pour directions.
+
     limite : Nombre entier qui représente le nombre max de personnes dans un même groupe (afin d'éviter d'en avoir un très gros monopolisant tout).
+    
     seuil_petits groupes : Nombre entier qui représente notre tolérance face à des petits groupes même si la limite est dépasssée (afin d'éviter au maximum les personnes totalement isolées)
     
     /!\ On modifie directement les valeurs dans la variable civilisation.
