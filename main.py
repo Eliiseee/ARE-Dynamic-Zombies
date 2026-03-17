@@ -1,5 +1,4 @@
 import random
-import uuid
 import numpy as np
 
 # probas metiers
@@ -19,6 +18,14 @@ ROLE = 3
 COORD = 4
 DANGER = 5
 IS_IN_GROUPE = 6
+
+#proprietes groupe
+
+ID_GROUPE = 0
+LISTE_IND = 1
+CAPACITES = 2
+DANGER_GROUPE = 3
+ETAT = 4
 
 # autres constantes
 
@@ -59,6 +66,65 @@ def get_next_coord(coord_libres):
         raise ValueError("Trop de personnes et pas assez de coordonnées")
     return coord_libres.pop()
 
+def get_dict_groupes(civilisation):
+    dict_groupes = {}
+
+    for personne in civilisation:
+        id = personne[IS_IN_GROUPE]
+        if id not in dict_groupes:
+            dict_groupes[id] = set()
+        dict_groupes[id].add(personne[ID])
+    
+    return dict_groupes
+
+def find_person(id, civilisaion):
+    for p in civilisaion:
+        if p[ID] == id:
+            return p
+    return -1
+
+def group_capacity(group, civilisation):
+    capacity = {"Soldat" : 0, "Agriculteur" : 0, "Medecin" : 0, "Eau" : 0}
+    nb_people = len(group)
+
+    for id in group:
+        person = find_person(id, civilisation)
+        role = person[ROLE]
+
+        if role != "Reste":
+            capacity[role] += 1
+    
+    return { key:(round_2(val/nb_people)) for key,val in capacity.items()}
+
+    
+def mean_group_danger(group, civilisation):
+    nb_people = len(group)
+    danger = 0
+
+    for id in group:
+        personne = find_person(id,civilisation)
+        danger += personne[DANGER]
+    return round_2(danger/nb_people)
+
+
+
+def group_info(civilisation):
+    dict_groupes = get_dict_groupes(civilisation)
+    liste_groupes = []
+
+    for key,val in dict_groupes.items():
+        groupe = [0]*5
+
+        groupe[ID_GROUPE] = key
+        groupe[LISTE_IND] = val
+        groupe[CAPACITES] = group_capacity(val, civilisation)
+        groupe[DANGER_GROUPE] = mean_group_danger(val, civilisation)
+        groupe[ETAT] = "Alive"
+    
+        liste_groupes.append(groupe)
+
+    return liste_groupes
+
 
 
 def Generation_personnes(nb):
@@ -71,12 +137,12 @@ def Generation_personnes(nb):
     for _ in range(nb):
         personne = [0] * 7
 
-        personne[ID] = uuid.uuid1()
+        personne[ID] = _
         personne[IS_ALIVE] = True
         personne[ALTRUISME] = round_2(random.random())
         personne[ROLE] = get_role()
         personne[COORD] = get_next_coord(coordonées)
-        personne[DANGER] = round_2(random.random())
+        personne[DANGER] = personne[ALTRUISME]/2
         personne[IS_IN_GROUPE] = -1
 
         civilisation.append(personne)
