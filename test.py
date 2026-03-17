@@ -1,6 +1,6 @@
 from main import *
 
-test = Generation_personnes(30)
+test = Generation_personnes(100)
 
 def afficher_population(population):
     # En-tête
@@ -39,9 +39,9 @@ def afficher_population(population):
             print(f"{value:<{width}}", end=" ")
         print()
 
-def trouver_isoles(civilisation):
-    directions = [(-1,0),(1,0),(0,-1),(0,1),
-                  (-1,-1),(-1,1),(1,-1),(1,1)]
+def trouver_isoles(civilisation, n=2):
+    directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if (x,y) != (0,0)]
+
     
     coord_map = {person[COORD]: person for person in civilisation}
     isoles = []
@@ -95,9 +95,6 @@ def afficher_groupes(population):
             print(f"{value:<{width}}", end=" ")
         print()
 
-groupement(test)
-afficher_groupes(test)
-
 def dessiner_population(population):
 
     grille = [["." for _ in range(LONGUEUR)] for _ in range(LARGEUR)]
@@ -117,4 +114,20 @@ def dessiner_population(population):
     
     print()
 
+def moyenne_groupe(test):
+    compte = comptage_groupe(test)
+    somme = sum(compte.values())
+    nb_groupes = len(compte)
+    return somme / nb_groupes
+
+groupement(test)
+
+afficher_groupes(test)
+
 dessiner_population(test)
+
+print(trouver_isoles(test))
+
+print(comptage_groupe(test))
+
+print(moyenne_groupe(test))

@@ -22,8 +22,8 @@ IS_IN_GROUPE = 6
 
 # autres constantes
 
-LARGEUR = 10
-LONGUEUR = 10
+LARGEUR = 22
+LONGUEUR = 22
 
 
 def get_role():
@@ -66,7 +66,6 @@ def Generation_personnes(nb):
 
     coordonées = init_coords_libres()
 
-
     civilisation = []
 
     for _ in range(nb):
@@ -79,15 +78,29 @@ def Generation_personnes(nb):
         personne[COORD] = get_next_coord(coordonées)
         personne[DANGER] = round_2(random.random())
         personne[IS_IN_GROUPE] = -1
-        
-
 
         civilisation.append(personne)
 
     return civilisation
 
-def fusionner_groupes(civilisation):
-    directions = [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]
+
+def comptage_groupe(civilisation):
+    compte = {}
+    for person in civilisation:
+        if person[IS_IN_GROUPE] in compte: 
+            compte[person[IS_IN_GROUPE]] += 1
+        else:
+            compte[person[IS_IN_GROUPE]] = 1
+    return compte
+    
+
+def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_groupes = 3):
+    """
+    Je (Omar) rajouterais une docstring plus tard
+    """
+
+    compte = comptage_groupe(civilisation)
+    directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1)]
     coord_map = {person[COORD]: person for person in civilisation}
     changed = True
 
@@ -103,17 +116,30 @@ def fusionner_groupes(civilisation):
 
             if groupes_voisins:
                 min_groupe = min(groupes_voisins + [person[IS_IN_GROUPE]])
-                if person[IS_IN_GROUPE] != min_groupe:
+                taille_source = compte.get(person[IS_IN_GROUPE],0)
+                taille_cible = compte.get(min_groupe,0)
+
+                if person[IS_IN_GROUPE] != min_groupe and (taille_cible < limite or taille_source < seuil_petits_groupes) and taille_cible < limite + seuil_petits_groupes :
+                    ancien = person[IS_IN_GROUPE]
                     person[IS_IN_GROUPE] = min_groupe
+                    compte[ancien] -= 1
+                    compte[min_groupe] = compte.get(min_groupe,0) + 1
                     changed = True
 
                 for v in voisins:
                     if v[IS_IN_GROUPE] > 0 and v[IS_IN_GROUPE] != min_groupe:
-                        v[IS_IN_GROUPE] = min_groupe
-                        changed = True
+                        taille_source_voisin = compte.get(v[IS_IN_GROUPE],0)
+                        taille_cible = compte.get(min_groupe,0)
+                        if taille_cible < limite or taille_source_voisin < seuil_petits_groupes and taille_cible < limite + seuil_petits_groupes:
+                            ancien = v[IS_IN_GROUPE]
+                            v[IS_IN_GROUPE] = min_groupe
+                            compte[ancien] -= 1
+                            compte[min_groupe] = compte.get(min_groupe,0) + 1
+                            changed = True
 
-def groupement(civilisation):
-    directions = [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]
+
+def groupement(civilisation, n = 2):
+    directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1)]
     
     coord_map = {person[COORD]: person for person in civilisation}
     groupe_id = 1
@@ -136,4 +162,4 @@ def groupement(civilisation):
             person[IS_IN_GROUPE] = groupe_id
             groupe_id += 1
 
-    fusionner_groupes(civilisation)
+    fusionner_groupes_proches_n(civilisation)
