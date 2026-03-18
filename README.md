@@ -12,6 +12,10 @@
 
   3) Création d'un système d'attaque et de zombie.
 
+  4) Création de fonctions d'affichage via numpy.
+
+  5) Création d'une fonction qui permet d'assigner un role manquant a la survie à une personne n'ayant pas de métiers (reste).
+
 # 1. Créer une fonction qui permet de générer des individus de plusieurs type différents.
 
 La fonction prendra en argument un nombre d'individus et renvoie une liste avec tout ces individus. Je pense qu'il serait meilleur que chaque individu soit une liste. (exemple soldat, medecin etc...) -> DONE 
