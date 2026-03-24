@@ -122,6 +122,10 @@ def group_capacity(group, civilisation):
 
     for id in group:
         person = find_person(id, civilisation)
+
+        if person == -1:
+            return 
+        
         role = person[ROLE]
 
         if role != "Reste":
@@ -136,6 +140,10 @@ def mean_group_danger(group, civilisation):
 
     for id in group:
         personne = find_person(id,civilisation)
+
+        if personne == -1:
+            return 
+        
         danger += personne[DANGER]
     return round_2(danger/nb_people)
 
@@ -157,6 +165,32 @@ def group_info(civilisation):
         liste_groupes.append(groupe)
 
     return liste_groupes
+
+
+
+
+def assign_role_to_reste(civilisation):
+    groupes = group_info(civilisation)
+
+    for groupe in groupes:
+        if groupe[CAPACITES]["Eau"] == 0:
+            for id in groupe[LISTE_IND]:
+                person = find_person(id, civilisation)
+
+                if person[ROLE] == "Reste":
+                    person[ROLE] = "Eau"
+                    groupe[CAPACITES]["Eau"] = 1 / len(groupe[LISTE_IND])
+                    break
+
+        if groupe[CAPACITES]["Agriculteur"] == 0:
+            for id in groupe[LISTE_IND]:
+                person = find_person(id, civilisation)
+
+                if person[ROLE] == "Reste":
+                    person[ROLE] = "Agriculteur"
+                    groupe[CAPACITES]["Agriculteur"] = 1 / len(groupe[LISTE_IND])
+                    break
+
 
 
 
