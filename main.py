@@ -387,7 +387,38 @@ def segregation(civilisation, N = 8, n= 1, threshold = 0.5):
                 coord = random.choice(liste_slots)
                 coord_map = {p[COORD]: p for p in civilisation}
             pers[COORD] = coord
+
+def deplacer_individus(civilisation, threshold=0.5, n=2):
+    """
+    Déplace les individus malheureux en fonction de leur rôle et de l'altruisme.
+    Modifie directement civilisation.
+    """
+
+    directions = [(dx,dy) for dx in range(-n,n+1) for dy in range(-n,n+1) if not (dx==0 and dy==0)]
     
+    coord_map = {p[COORD]: p for p in civilisation}
+
+    slots_libres = [(x,y) for x in range(LONGUEUR) for y in range(LARGEUR) if (x,y) not in coord_map]
+
+    unhappy = iteration_segregation(civilisation, threshold, n)
+
+    for person in unhappy:
+        random.shuffle(slots_libres)
+
+        for slot in slots_libres:
+            if is_happy_at(person, slot, coord_map, directions, threshold):
+                if person[ALTRUISME] > 0.5:
+                    voisins = [coord_map.get((slot[0]+dx, slot[1]+dy)) for dx, dy in directions if coord_map.get((slot[0]+dx, slot[1]+dy))]
+                    ratio_voisins = 0
+                    if voisins:
+                        ratio_voisins = sum(1 for v in voisins if is_happy_at(v, v[COORD], coord_map, directions, threshold)) / len(voisins)
+                    if ratio_voisins < 0.5: 
+                        continue
+
+                coord_map.pop(person[COORD])
+                person[COORD] = slot
+                coord_map[slot] = person
+                slots_libres.remove(slot)
     
 
 
