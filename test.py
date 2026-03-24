@@ -129,10 +129,10 @@ dessiner_population(test)
 
 # print(trouver_isoles(test))
 
-# print(comptage_groupe(test))
+print(comptage_groupe(test))
 
-# print(moyenne_groupe(test))
+print(moyenne_groupe(test))
 
 # print(get_dict_groupes(test))
 
-print(group_info(test))
+# print(group_info(test))
