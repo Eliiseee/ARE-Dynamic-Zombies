@@ -14,7 +14,9 @@
 
   4) Création de fonctions d'affichage via numpy.
 
-  5) Création d'une fonction qui permet d'assigner un role manquant a la survie à une personne n'ayant pas de métiers (reste).
+  5) Création d'une fonction qui permet d'assigner un role manquant a la survie à une personne n'ayant pas de métiers (reste). -> DONE
+
+  6) Creation d'une fonction qui effectue une segregation des personnes en groupes par leur role.
 
 # 1. Créer une fonction qui permet de générer des individus de plusieurs type différents.
 

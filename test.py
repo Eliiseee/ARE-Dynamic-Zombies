@@ -128,9 +128,9 @@ def moyenne_groupe(test):
     nb_groupes = len(compte)
     return somme / nb_groupes
 
-# afficher_groupes(test)
+afficher_groupes(test)
 
-# dessiner_population(test)
+dessiner_population(test)
 
 # print(trouver_isoles(test))
 
@@ -143,4 +143,13 @@ def moyenne_groupe(test):
 # print(test_assign_roles)
 # assign_role_to_reste(test_assign_roles)
 # print(test_assign_roles)
+
+print(group_info(test))
+segregation(test)
+groupement(test)
+print(group_info(test))
+dessiner_population(test)
+
+
+
 
