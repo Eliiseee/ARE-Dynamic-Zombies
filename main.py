@@ -168,7 +168,6 @@ def group_info(civilisation):
 
 
 
-
 def assign_role_to_reste(civilisation):
     groupes = group_info(civilisation)
 
@@ -190,7 +189,6 @@ def assign_role_to_reste(civilisation):
                     person[ROLE] = "Agriculteur"
                     groupe[CAPACITES]["Agriculteur"] = 1 / len(groupe[LISTE_IND])
                     break
-
 
 
 
