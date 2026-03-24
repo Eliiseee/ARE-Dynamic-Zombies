@@ -341,28 +341,6 @@ def groupement(civilisation, n = 2):
     fusionner_groupes_proches_n(civilisation)
 
 
-def iteration_segregation(civilisation, threshold = 0.5, n = 2):
-
-    directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if not (x == 0 and y == 0)]
-    coord_map = {p[COORD]: p for p in civilisation}
-    unhappy = []
-
-    for person in civilisation:
-        x, y = person[COORD]
-
-        voisins = [coord_map.get((x+dx, y+dy)) for dx, dy in directions if coord_map.get((x+dx, y+dy))]
-
-        if not voisins:
-            continue
-
-        same_role = sum(1 for v in voisins if v[ROLE] == person[ROLE])
-        ratio = same_role / len(voisins)
-
-        if ratio < threshold: # proportion des voisins de meme role
-            unhappy.append(person)
-    
-    return unhappy
-
 def is_happy_at(person, coord, coord_map, directions, threshold = 0.5):
     x, y = coord
 
@@ -378,12 +356,24 @@ def is_happy_at(person, coord, coord_map, directions, threshold = 0.5):
     same = sum(1 for v in voisins if v[ROLE] == person[ROLE])
     return (same / len(voisins)) >= threshold
 
+def iteration_segregation(civilisation, threshold = 0.5, n = 1):
+
+    directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if not (x == 0 and y == 0)]
+    coord_map = {p[COORD]: p for p in civilisation}
+    unhappy = []
+
+    for person in civilisation:
+        if not is_happy_at(person, person[COORD], coord_map, directions, threshold): # proportion des voisins de meme role
+            unhappy.append(person)
+    
+    return unhappy
+
 
 def free_slots(coord_map):
     return [(x,y) for x in range(LARGEUR) for y in range(LONGUEUR) if not (x,y) in coord_map]
 
 
-def segregation(civilisation, N = 8, n= 2, threshold = 0.5):
+def segregation(civilisation, N = 8, n= 1, threshold = 0.5):
     
     for _ in range(N):
         list_unhappy =  iteration_segregation(civilisation, threshold)
@@ -395,6 +385,7 @@ def segregation(civilisation, N = 8, n= 2, threshold = 0.5):
             coord = pers[COORD]
             while not is_happy_at(pers, coord, coord_map, directions, threshold):
                 coord = random.choice(liste_slots)
+                coord_map = {p[COORD]: p for p in civilisation}
             pers[COORD] = coord
     
     
