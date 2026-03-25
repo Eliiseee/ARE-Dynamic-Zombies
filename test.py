@@ -179,6 +179,7 @@ def plot_civilisation(civilisation):
 plot_civilisation(test)
 
 segregation(test)
+deplacer_individus(test)
 
 plot_civilisation(test)
 
