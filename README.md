@@ -16,7 +16,9 @@
 
   5) Création d'une fonction qui permet d'assigner un role manquant a la survie à une personne n'ayant pas de métiers (reste). -> DONE
 
-  6) Creation d'une fonction qui effectue une segregation des personnes en groupes par leur role.
+  6) Creation d'une fonction qui effectue une segregation des personnes en groupes par leur role. -> DONE
+
+  7) Faire un k-means pour grouper les gens.
 
 # 1. Créer une fonction qui permet de générer des individus de plusieurs type différents.
 

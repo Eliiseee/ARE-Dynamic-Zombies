@@ -1,13 +1,13 @@
 from main import *
 
-test = Generation_personnes(100)
+test = Generation_personnes(160)
 test_assign_roles = [
     [0, True, 0.58, 'Soldat', (9, 2), 0.29, 1],
     [1, True, 0.58, 'Reste', (9, 2), 0.29, 1],
     [2, True, 0.58, 'Reste', (9, 2), 0.29, 1]
 ]
 
-groupement(test)
+# groupement(test)
 
 
 def afficher_population(population):
@@ -122,15 +122,69 @@ def dessiner_population(population):
     
     print()
 
+
+def debug_groupes(civilisation):
+    dict_groupes = get_dict_groupes(civilisation)
+
+    print("\n===== ETAT DES GROUPES =====\n")
+
+    for gid, membres in dict_groupes.items():
+        taille = len(membres)
+        capacite = group_capacity(membres, civilisation)
+
+        print(f"Groupe {gid}")
+        print(f"  Nombre de personnes : {taille}")
+        print(f"  Capacités : {capacite}")
+        print("-" * 30)
+
 def moyenne_groupe(test):
     compte = comptage_groupe(test)
     somme = sum(compte.values())
     nb_groupes = len(compte)
     return somme / nb_groupes
 
+
+def civilisation_to_grid(civilisation):
+    grid = np.full((LONGUEUR, LARGEUR), -1)
+
+    role_map = {
+        "Soldat": 0,
+        "Medecin": 1,
+        "Agriculteur": 2,
+        "Eau": 3,
+        "Reste": 4
+    }
+
+    for person in civilisation:
+        x, y = person[COORD]
+        grid[x][y] = role_map.get(person[ROLE], -1)
+
+    return grid
+
+
+def plot_civilisation(civilisation):
+    grid = civilisation_to_grid(civilisation)
+
+    plt.figure()
+    img = plt.imshow(grid)
+
+    cbar = plt.colorbar(img)
+    cbar.set_ticks([0,1,2,3,4])
+    cbar.set_ticklabels(["Soldat", "Medecin", "Agriculteur", "Eau", "Reste"])
+
+    plt.title("Etat de la civilisation")
+    plt.show()
+
+
+plot_civilisation(test)
+
+segregation(test)
+
+plot_civilisation(test)
+
 # afficher_groupes(test)
 
-dessiner_population(test)
+# dessiner_population(test)
 
 # print(trouver_isoles(test))
 
@@ -144,12 +198,20 @@ dessiner_population(test)
 # assign_role_to_reste(test_assign_roles)
 # print(test_assign_roles)
 
-print(group_info(test))
-groupement(test)
-segregation(test)
+# print(group_info(test))
+# print('------------------------------------')
 # groupement(test)
-print(group_info(test))
-dessiner_population(test)
+
+# debug_groupes(test)
+
+# segregation(test)
+# dessiner_population(test)
+
+# groupement(test)
+
+# debug_groupes(test)
+# print(group_info(test))
+# dessiner_population(test)
 
 
 

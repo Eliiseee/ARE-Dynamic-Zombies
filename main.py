@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
 # probas metiers
 
@@ -26,6 +27,7 @@ LISTE_IND = 1
 CAPACITES = 2
 DANGER_GROUPE = 3
 ETAT = 4
+THRESHOLD = 0.35
 
 # autres constantes
 
@@ -341,7 +343,7 @@ def groupement(civilisation, n = 2):
     fusionner_groupes_proches_n(civilisation)
 
 
-def is_happy_at(person, coord, coord_map, directions, threshold = 0.5):
+def is_happy_at(person, coord, coord_map, directions, threshold = THRESHOLD):
     x, y = coord
 
     voisins = [
@@ -354,9 +356,9 @@ def is_happy_at(person, coord, coord_map, directions, threshold = 0.5):
         return True
 
     same = sum(1 for v in voisins if v[ROLE] == person[ROLE])
-    return (same / len(voisins)) >= threshold
+    return (same / len(voisins)) >= threshold   
 
-def iteration_segregation(civilisation, threshold = 0.5, n = 1):
+def iteration_segregation(civilisation, threshold = THRESHOLD, n = 1):
 
     directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if not (x == 0 and y == 0)]
     coord_map = {p[COORD]: p for p in civilisation}
@@ -373,25 +375,36 @@ def free_slots(coord_map):
     return [(x,y) for x in range(LARGEUR) for y in range(LONGUEUR) if not (x,y) in coord_map]
 
 
-def segregation(civilisation, N = 8, n= 1, threshold = 0.5):
+def segregation(civilisation, N = 100, n= 1, threshold = THRESHOLD):
     
     for _ in range(N):
-        list_unhappy =  iteration_segregation(civilisation, threshold)
+        list_unhappy =  iteration_segregation(civilisation, threshold, n)
         directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if not (x == 0 and y == 0)]
         coord_map = {p[COORD]: p for p in civilisation}
-        liste_slots = free_slots(coord_map)
+        free_spots = free_slots(coord_map)
 
         for pers in list_unhappy:
-            coord = pers[COORD]
-            while not is_happy_at(pers, coord, coord_map, directions, threshold):
-                coord = random.choice(liste_slots)
-                coord_map = {p[COORD]: p for p in civilisation}
-            pers[COORD] = coord
+            old_coord = pers[COORD]
+            del coord_map[old_coord]
+
+            random.shuffle(free_spots)
+
+            moved = False
+
+            for spot in free_spots:
+                if is_happy_at(pers, spot, coord_map, directions, threshold):
+
+                    pers[COORD] = spot
+                    pers[IS_IN_GROUPE] = -1
+                    coord_map[spot] = pers
+                    free_spots.remove(spot)
+
+                    moved = True
+                    break
+
+            if not moved:
+                coord_map[old_coord] = pers
     
-    
 
 
-
-
-
-
+# def k_means(civil, k=10):
