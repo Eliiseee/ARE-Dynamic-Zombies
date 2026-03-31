@@ -165,7 +165,13 @@ def group_info(civilisation):
         groupe[CAPACITES] = group_capacity(val, civilisation)
         groupe[DANGER_GROUPE] = mean_group_danger(val, civilisation)
         groupe[ETAT] = "Alive"
-        groupe[RESSOURCES] = {"Eau" : 1, "Agriculture" : 1}
+
+        groupe[RESSOURCES] = {
+            "Eau" : 20, 
+            "Agriculture" : 20, 
+            "Soldat" : len(groupe) * groupe[CAPACITES]["Soldat"], 
+            "Medecin" : len(groupe) * groupe[CAPACITES]["Medecin"]
+        }
     
         liste_groupes.append(groupe)
 
@@ -463,3 +469,19 @@ def k_means(civilisation, k=16, max_iter=100):
     for i in range(k):
         for person in clusters_membres[i]:
             person[IS_IN_GROUPE] = i+1
+
+def update_ressources(civilisation):
+    groupes = group_info(civilisation)
+
+    produce_eau = 2.5
+    produce_agr = 2.5
+
+    for groupe in groupes:
+        groupe[RESSOURCES]["Eau"] -= len(groupe[LISTE_IND])
+        groupe[RESSOURCES]["Agriculture"] -= len(groupe[LISTE_IND])
+
+        groupe[RESSOURCES]["Eau"] += np.floor(len(groupe[LISTE_IND]) * groupe[CAPACITES]["Eau"]) * produce_eau
+        groupe[RESSOURCES]["Agriculture"] += np.floor(len(groupe[LISTE_IND]) * groupe[CAPACITES]["Agriculteur"]) * produce_agr
+    
+    
+        
