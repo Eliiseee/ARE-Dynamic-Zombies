@@ -418,7 +418,6 @@ def deplacer_individus(civilisation, threshold=0.5, n=2):
                     if ratio_voisins < 0.5: 
                         continue
 
-                coord_map.pop(pers[COORD])
                 pers[COORD] = slot
                 coord_map[slot] = pers
                 slots_libres.remove(slot)    

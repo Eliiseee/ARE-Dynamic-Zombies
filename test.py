@@ -200,6 +200,7 @@ def plot_civilisation_groupe(civilisation):
 plot_civilisation_role(test)
 plot_civilisation_groupe(test)
 segregation(test)
+deplacer_individus(test)
 k_means(test)
 assign_role_to_reste(test)
 debug_groupes(test)
