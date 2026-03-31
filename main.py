@@ -425,3 +425,42 @@ def deplacer_individus(civilisation, threshold=0.5, n=2):
 
 
 # def k_means(civil, k=10):
+
+def distance_euclidienne(p1, p2):
+    return ((p2[0]-p1[0])**2+(p2[1]-p1[1])**2)**0.5
+
+def k_means(civilisation, k=10, max_iter=100):
+    if not civilisation or len(civilisation) < k:
+        return
+    
+    personnes_au_hasard = random.sample(civilisation, k)
+    centroides=[p[COORD] for p in personnes_au_hasard]
+    for _ in range(max_iter):
+        clusters_membres = [[] for _ in range(k)]
+        for person in civilisation:
+            pos_actuelle = person[COORD]
+            distances = [distance_euclidienne(pos_actuelle, c) for c in centroides]
+            index_cluster_proche = distances.index(min(distances))
+            clusters_membres[index_cluster_proche].append(person)
+
+        nouveaux_centroides = []
+        changements = False
+        for i in range(k):
+            membres = clusters_membres[i]
+            if not membres:
+                nouveaux_centroides.append(centroides[i])
+                continue
+            somme_x=sum(p[COORD][0] for p in membres)
+            somme_y=sum(p[COORD][1] for p in membres)
+            nouveau_centre = (somme_x / len(membres), somme_y / len(membres))
+
+            if distance_euclidienne(nouveau_centre, centroides[i]) > 0.001:
+                changements = True
+            nouveaux_centroides.append(nouveau_centre)
+        centroides = nouveaux_centroides
+        if not changements:
+            break
+
+    for i in range(k):
+        for person in clusters_membres[i]:
+            person[IS_IN_GROUPE] = i+1
