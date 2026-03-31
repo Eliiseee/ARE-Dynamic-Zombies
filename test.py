@@ -144,7 +144,7 @@ def moyenne_groupe(test):
     return somme / nb_groupes
 
 
-def civilisation_to_grid(civilisation):
+def civilisation_to_grid_role(civilisation):
     grid = np.full((LONGUEUR, LARGEUR), -1)
 
     role_map = {
@@ -162,8 +162,8 @@ def civilisation_to_grid(civilisation):
     return grid
 
 
-def plot_civilisation(civilisation):
-    grid = civilisation_to_grid(civilisation)
+def plot_civilisation_role(civilisation):
+    grid = civilisation_to_grid_role(civilisation)
 
     plt.figure()
     img = plt.imshow(grid)
@@ -175,45 +175,34 @@ def plot_civilisation(civilisation):
     plt.title("Etat de la civilisation")
     plt.show()
 
+def civilisation_to_grid_groupe(civilisation):
+    grid = np.full((LONGUEUR, LARGEUR), -1)
 
-plot_civilisation(test)
+    groupe_map = {p[IS_IN_GROUPE] : p[IS_IN_GROUPE] for p in civilisation}
 
+    for person in civilisation:
+        x, y = person[COORD]
+        grid[x][y] = groupe_map.get(person[IS_IN_GROUPE], -1)
+
+    return grid
+
+def plot_civilisation_groupe(civilisation):
+    grid = civilisation_to_grid_groupe(civilisation)
+
+    plt.figure()
+    img = plt.imshow(grid)
+
+    cbar = plt.colorbar(img)
+
+    plt.title("Etat de la civilisation")
+    plt.show()
+
+plot_civilisation_role(test)
+plot_civilisation_groupe(test)
 segregation(test)
-deplacer_individus(test)
-
-plot_civilisation(test)
-
-# afficher_groupes(test)
-
-# dessiner_population(test)
-
-# print(trouver_isoles(test))
-
-# print(comptage_groupe(test))
-
-# print(moyenne_groupe(test))
-
-# print(get_dict_groupes(test))
-
-# print(test_assign_roles)
-# assign_role_to_reste(test_assign_roles)
-# print(test_assign_roles)
-
-# print(group_info(test))
-# print('------------------------------------')
-# groupement(test)
-
-# debug_groupes(test)
-
-# segregation(test)
-# dessiner_population(test)
-
-# groupement(test)
-
-# debug_groupes(test)
-# print(group_info(test))
-# dessiner_population(test)
-
-
-
+k_means(test)
+assign_role_to_reste(test)
+debug_groupes(test)
+plot_civilisation_role(test)
+plot_civilisation_groupe(test)
 

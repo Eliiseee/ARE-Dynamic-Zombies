@@ -375,7 +375,7 @@ def free_slots(coord_map):
     return [(x,y) for x in range(LARGEUR) for y in range(LONGUEUR) if not (x,y) in coord_map]
 
 
-def segregation(civilisation, N = 100, n= 1, threshold = THRESHOLD):
+def segregation(civilisation, N = 300, n= 1, threshold = THRESHOLD):
     
     for _ in range(N):
         list_unhappy =  iteration_segregation(civilisation, threshold, n)
@@ -423,13 +423,10 @@ def deplacer_individus(civilisation, threshold=0.5, n=2):
                 coord_map[slot] = pers
                 slots_libres.remove(slot)    
 
-
-# def k_means(civil, k=10):
-
 def distance_euclidienne(p1, p2):
     return ((p2[0]-p1[0])**2+(p2[1]-p1[1])**2)**0.5
 
-def k_means(civilisation, k=10, max_iter=100):
+def k_means(civilisation, k=16, max_iter=100):
     if not civilisation or len(civilisation) < k:
         return civilisation
     
