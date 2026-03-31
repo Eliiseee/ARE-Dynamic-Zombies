@@ -1,13 +1,10 @@
 from main import *
 
-test = Generation_personnes(160)
 test_assign_roles = [
     [0, True, 0.58, 'Soldat', (9, 2), 0.29, 1],
     [1, True, 0.58, 'Reste', (9, 2), 0.29, 1],
     [2, True, 0.58, 'Reste', (9, 2), 0.29, 1]
 ]
-
-# groupement(test)
 
 
 def afficher_population(population):
@@ -197,13 +194,17 @@ def plot_civilisation_groupe(civilisation):
     plt.title("Etat de la civilisation")
     plt.show()
 
-plot_civilisation_role(test)
-plot_civilisation_groupe(test)
-segregation(test)
-deplacer_individus(test)
-k_means(test)
-assign_role_to_reste(test)
-debug_groupes(test)
-plot_civilisation_role(test)
-plot_civilisation_groupe(test)
+def initialisation(civilisation):
+    plot_civilisation_role(civilisation)
+    plot_civilisation_groupe(civilisation)
+    segregation(civilisation)
+    deplacer_individus(civilisation)
+    k_means(civilisation)
+    assign_role_to_reste(civilisation)
+    debug_groupes(civilisation)
+    plot_civilisation_role(civilisation)
+    plot_civilisation_groupe(civilisation)
+
+test = Generation_personnes(160)
+initialisation(test)
 
