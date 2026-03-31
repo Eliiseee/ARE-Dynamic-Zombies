@@ -18,7 +18,7 @@
 
   6) Creation d'une fonction qui effectue une segregation des personnes en groupes par leur role. -> DONE
 
-  7) Faire un k-means pour grouper les gens.
+  7) Faire un k-means pour grouper les gens. -> DONE
 
 # 1. Créer une fonction qui permet de générer des individus de plusieurs type différents.
 
