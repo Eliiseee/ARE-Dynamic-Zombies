@@ -6,7 +6,7 @@
 
 # 0. Liste de chose à faire pour la prochaine fois:
 
-  1) Création d'une fonction de déplacement d'un individus.
+  1) Création d'une fonction de déplacement d'un individus. (échanger 1/4 de la population d'un groupe avec un autre en choisissant aléatoirement une direction (Nord, Sud, Est, Ouest))
  
   2) Création d'une fonction qui permet de rassembler géographiquement tous les individus d'un groupe entre eux.
 
