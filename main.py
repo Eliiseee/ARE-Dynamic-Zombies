@@ -431,7 +431,7 @@ def distance_euclidienne(p1, p2):
 
 def k_means(civilisation, k=10, max_iter=100):
     if not civilisation or len(civilisation) < k:
-        return
+        return civilisation
     
     personnes_au_hasard = random.sample(civilisation, k)
     centroides=[p[COORD] for p in personnes_au_hasard]
