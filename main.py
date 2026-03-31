@@ -26,7 +26,9 @@ ID_GROUPE = 0
 LISTE_IND = 1
 CAPACITES = 2
 DANGER_GROUPE = 3
-ETAT = 4
+ETAT = 4    
+RESSOURCES = 5
+
 THRESHOLD = 0.35
 
 # autres constantes
@@ -156,13 +158,14 @@ def group_info(civilisation):
     liste_groupes = []
 
     for key,val in dict_groupes.items():
-        groupe = [0]*5
+        groupe = [0]*6
 
         groupe[ID_GROUPE] = key
         groupe[LISTE_IND] = val
         groupe[CAPACITES] = group_capacity(val, civilisation)
         groupe[DANGER_GROUPE] = mean_group_danger(val, civilisation)
         groupe[ETAT] = "Alive"
+        groupe[RESSOURCES] = {"Eau" : 1, "Agriculture" : 1}
     
         liste_groupes.append(groupe)
 
