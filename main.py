@@ -405,12 +405,12 @@ def deplacer_individus(civilisation, threshold=0.5, n=2):
 
     unhappy = iteration_segregation(civilisation, threshold, n)
 
-    for person in unhappy:
+    for pers in unhappy:
         random.shuffle(slots_libres)
 
         for slot in slots_libres:
-            if is_happy_at(person, slot, coord_map, directions, threshold):
-                if person[ALTRUISME] > 0.5:
+            if is_happy_at(pers, slot, coord_map, directions, threshold):
+                if pers[ALTRUISME] > 0.5:
                     voisins = [coord_map.get((slot[0]+dx, slot[1]+dy)) for dx, dy in directions if coord_map.get((slot[0]+dx, slot[1]+dy))]
                     ratio_voisins = 0
                     if voisins:
@@ -418,9 +418,9 @@ def deplacer_individus(civilisation, threshold=0.5, n=2):
                     if ratio_voisins < 0.5: 
                         continue
 
-                coord_map.pop(person[COORD])
-                person[COORD] = slot
-                coord_map[slot] = person
+                coord_map.pop(pers[COORD])
+                pers[COORD] = slot
+                coord_map[slot] = pers
                 slots_libres.remove(slot)    
 
 
