@@ -168,7 +168,7 @@ def plot_civilisation_role(civilisation):
         "blue",     # Medecin
         "green",    # Agriculteur
         "cyan",     # Eau
-        "lightgrey" # Reste
+        "darkgrey" # Reste
     ])
 
     plt.figure()
@@ -215,6 +215,14 @@ def initialisation(civilisation):
     plot_civilisation_role(civilisation)
     plot_civilisation_groupe(civilisation)
 
+    return(civilisation)
+
+
 test = Generation_personnes(160)
-initialisation(test)
+init = initialisation(test) 
+
+
+for t in range(10):
+    update_ressources(init, ressources_memoire)
+    print(group_capacity(init, ressources_memoire))
 
