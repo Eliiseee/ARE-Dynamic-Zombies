@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 # probas metiers
 
@@ -114,8 +115,8 @@ def get_dict_groupes(civilisation):
     
     return dict_groupes
 
-def find_person(id, civilisaion):
-    for p in civilisaion:
+def find_person(id, civilisation):
+    for p in civilisation:
         if p[ID] == id:
             return p
     return -1

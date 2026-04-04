@@ -154,7 +154,7 @@ def civilisation_to_grid_role(civilisation):
 
     for person in civilisation:
         x, y = person[COORD]
-        grid[x][y] = role_map.get(person[ROLE], -1)
+        grid[y][x] = role_map.get(person[ROLE], -1)
 
     return grid
 
@@ -162,12 +162,21 @@ def civilisation_to_grid_role(civilisation):
 def plot_civilisation_role(civilisation):
     grid = civilisation_to_grid_role(civilisation)
 
+    cmap = mcolors.ListedColormap([
+        "#f5f5dc",
+        "red",      # Soldat
+        "blue",     # Medecin
+        "green",    # Agriculteur
+        "cyan",     # Eau
+        "lightgrey" # Reste
+    ])
+
     plt.figure()
-    img = plt.imshow(grid)
+    img = plt.imshow(grid, cmap=cmap, vmin=-1, vmax=4)
 
     cbar = plt.colorbar(img)
-    cbar.set_ticks([0,1,2,3,4])
-    cbar.set_ticklabels(["Soldat", "Medecin", "Agriculteur", "Eau", "Reste"])
+    cbar.set_ticks([-1,0,1,2,3,4])
+    cbar.set_ticklabels(["Fond","Soldat", "Medecin", "Agriculteur", "Eau", "Reste"])
 
     plt.title("Etat de la civilisation")
     plt.show()
@@ -179,7 +188,7 @@ def civilisation_to_grid_groupe(civilisation):
 
     for person in civilisation:
         x, y = person[COORD]
-        grid[x][y] = groupe_map.get(person[IS_IN_GROUPE], -1)
+        grid[y][x] = groupe_map.get(person[IS_IN_GROUPE], -1)
 
     return grid
 
@@ -202,6 +211,7 @@ def initialisation(civilisation):
     k_means(civilisation)
     assign_role_to_reste(civilisation)
     debug_groupes(civilisation)
+    afficher_population(civilisation)
     plot_civilisation_role(civilisation)
     plot_civilisation_groupe(civilisation)
 
