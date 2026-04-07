@@ -8,11 +8,11 @@
 
   1) Création d'une fonction de déplacement d'un individus. (échanger 1/4 de la population d'un groupe avec un autre en choisissant aléatoirement une direction (Nord, Sud, Est, Ouest))
  
-  2) Création d'une fonction qui permet de rassembler géographiquement tous les individus d'un groupe entre eux.
+  2) Création d'une fonction qui permet de rassembler géographiquement tous les individus d'un groupe entre eux. -> DONE
 
   3) Création d'un système d'attaque et de zombie.
 
-  4) Création de fonctions d'affichage via numpy.
+  4) Création de fonctions d'affichage via numpy. -> DONE
 
   5) Création d'une fonction qui permet d'assigner un role manquant a la survie à une personne n'ayant pas de métiers (reste). -> DONE
 
@@ -20,7 +20,7 @@
 
   7) Faire un k-means pour grouper les gens. -> DONE
 
-  8) Faire un affichage via tkinter qui permet de vérifier nos travaux / faire la simulation de manière plus simple (Omar je m'en occupe).
+  8) Faire un affichage via tkinter qui permet de vérifier nos travaux / faire la simulation de manière plus simple (Omar je m'en occupe). -> DONE
 
 # 1. Créer une fonction qui permet de générer des individus de plusieurs type différents.
 
@@ -64,7 +64,13 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 1) Création des fonctions d'affiches avec des boutons. -> DONE
 
-2) Donner le choix de pouvoir choisir entre la simulation avec schelling ou la simulation dans un cadre oprimal (ce qu'on avait fait de base). -> DONE
+2) Donner le choix de pouvoir choisir entre la simulation avec schelling (#4)ou la simulation dans un cadre oprimal (#2). -> DONE
+
+# 6. Choix des variables.
+
+1) Bien choisir les différentes variables afin d'avoir une simulation logique.
+
+2) Nous noterons ici les différents jeu de variables choisis.
 
 
 
