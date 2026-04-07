@@ -502,3 +502,6 @@ def update_ressources(civilisation, ressources_memoire):
         ressources_memoire[gid]["Agriculture"] = agr
 
     return groupes
+
+def get_ressources_by_id(gid, ressources_memoire):
+    return ressources_memoire.get(gid, None)

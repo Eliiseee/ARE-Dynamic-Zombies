@@ -218,11 +218,19 @@ def initialisation(civilisation):
     return(civilisation)
 
 
-test = Generation_personnes(160)
-init = initialisation(test) 
+def simulation():
 
+    test = Generation_personnes(160)
+    init = initialisation(test) 
 
-for t in range(10):
-    update_ressources(init, ressources_memoire)
-    print(group_capacity(init, ressources_memoire))
+    for t in range(10):
+        print('Jour :', t)
+        update_ressources(init, ressources_memoire)
 
+        groupes = get_dict_groupes(init)
+
+        for gid, membres in groupes.items():
+            ressources = get_ressources_by_id(gid, ressources_memoire)
+            print(f"Groupe {gid} :", ressources)
+
+simulation()
