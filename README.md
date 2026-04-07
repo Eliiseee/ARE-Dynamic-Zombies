@@ -64,7 +64,7 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 1) Création des fonctions d'affiches avec des boutons. -> DONE
 
-2) Donner le choix de pouvoir choisir entre la simulation avec schelling (#4)ou la simulation dans un cadre oprimal (#2). -> DONE
+2) Donner le choix de pouvoir choisir entre la simulation avec schelling (#4) ou la simulation dans un cadre optimal (#2). -> DONE
 
 # 6. Choix des variables.
 
