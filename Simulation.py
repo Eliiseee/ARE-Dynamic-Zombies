@@ -202,7 +202,7 @@ class SimulationApp:
         # Graphique Soldats / Médecins
         self.ax_roles.clear()
         self.ax_roles.plot(jours, self.historique_soldats, label="Soldats", color="red")
-        self.ax_roles.plot(jours, self.historique_medecins, label="Médecins", color="orange")
+        self.ax_roles.plot(jours, self.historique_medecins, label="Médecins", color="blue")
         self.ax_roles.set_xlabel("Jour")
         self.ax_roles.set_ylabel("Nombre")
         self.ax_roles.set_title("Historique rôles")
