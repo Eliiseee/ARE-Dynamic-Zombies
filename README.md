@@ -56,7 +56,9 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 3) Création d'un système de mort.
 
-4) Création d'un système d'attaque de zombie (sans les créer). 
+4) Création d'un système d'attaque de zombie (sans les créer).
+
+5) Création d'une fonction de migration d'un individus. (échanger 1/4 de la population d'un groupe avec un autre en choisissant aléatoirement une direction (Nord, Sud, Est, Ouest))
 
 # 5. Création d'un système d'affichage dynamique via Tkinter.
 
