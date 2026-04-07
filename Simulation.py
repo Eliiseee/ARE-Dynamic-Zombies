@@ -3,6 +3,7 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.colors as mcolors
+from matplotlib.patches import Patch
 import numpy as np
 
 from main import *
@@ -10,7 +11,7 @@ from main import *
 class SimulationApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Simulation Société Dashboard")
+        self.root.title("Meilleur projet d'ARE au monde")
 
         self.civilisation = []
         self.ressources_memoire = {}
@@ -39,9 +40,10 @@ class SimulationApp:
         ttk.Button(control_frame, text="Mode Role", command=lambda: self.set_mode("role")).pack(side=tk.LEFT, padx=5)
         ttk.Button(control_frame, text="Mode Groupe", command=lambda: self.set_mode("groupe")).pack(side=tk.LEFT, padx=5)
         ttk.Button(control_frame, text="Reset", command=self.reset_simulation).pack(side=tk.LEFT, padx=5)
+        ttk.Button(control_frame, text="Kill", command=self.kill_tkinter).pack(side=tk.LEFT, padx=5)
 
-        self.speed = tk.Scale(control_frame, from_=100, to=1000, orient="horizontal", label="Vitesse (ms)")
-        self.speed.set(500)
+        self.speed = tk.Scale(control_frame, from_=100, to=3000, orient="horizontal", label="Vitesse (ms)")
+        self.speed.set(1000)
         self.speed.pack(side=tk.RIGHT, padx=10)
 
         self.label_jour = ttk.Label(control_frame, text=f"Jour : {self.jour}")
@@ -72,6 +74,10 @@ class SimulationApp:
         # Texte groupes
         self.text = tk.Text(right_frame, height=15)
         self.text.pack(fill=tk.BOTH, expand=True, pady=5)
+
+    def kill_tkinter(self):
+        self.running = False
+        self.root.destroy()
 
     # ---------------- INIT ----------------
     def init_sim_schelling(self):
@@ -159,12 +165,19 @@ class SimulationApp:
 
         if self.mode == "role":
             role_map = {"Soldat":0,"Medecin":1,"Agriculteur":2,"Eau":3,"Reste":4}
+            color_map = ["#f5f5dc","red","blue","green","cyan","grey"]
+            role_labels = ["Fond","Soldat","Médecin","Agriculteur","Eau","Reste"]
+
             for p in self.civilisation:
                 x, y = p[COORD]
                 grid[y][x] = role_map.get(p[ROLE], -1)
-            cmap = mcolors.ListedColormap(["#f5f5dc","red","blue","green","cyan","grey"])
-            self.ax_grid.imshow(grid + 1, cmap=cmap, vmin=0, vmax=5)
+
+            self.ax_grid.imshow(grid + 1, cmap=mcolors.ListedColormap(color_map), vmin=0, vmax=5)
             self.ax_grid.set_title("Mode : Rôles")
+
+            # Ajouter la légende directement sur le graphique
+            legend_elements = [Patch(facecolor=color_map[i], label=role_labels[i]) for i in range(len(role_labels))]
+            self.ax_grid.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.15, 1))
         else:
             for p in self.civilisation:
                 x, y = p[COORD]
