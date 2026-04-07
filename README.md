@@ -62,9 +62,9 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 # 5. Création d'un système d'affichage dynamique via Tkinter.
 
-1) Création des fonctions d'affiches avec des boutons.
+1) Création des fonctions d'affiches avec des boutons. -> DONE
 
-2) Donner le choix de pouvoir choisir entre la simulation avec schelling ou la simulation dans un cadre oprimal (ce qu'on avait fait de base).
+2) Donner le choix de pouvoir choisir entre la simulation avec schelling ou la simulation dans un cadre oprimal (ce qu'on avait fait de base). -> DONE
 
 
 
