@@ -64,5 +64,7 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 1) Création des fonctions d'affiches avec des boutons.
 
+2) Donner le choix de pouvoir choisir entre la simulation avec schelling ou la simulation dans un cadre oprimal (ce qu'on avait fait de base).
+
 
 
