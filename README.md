@@ -48,6 +48,19 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 5) Création de la nouvelle fonction moyenne_groupe qui retourne la moyenne du nombre d'individus dans tout les groupes. -> DONE
 
+# 4. Création de groupes beaucoup plus réalistes. 
+
+1) Instauration de l'algorithme de ségrégation de Schelling. -> DONE
+
+2) Instauration de Kmeans afin de créer K groupes sociaux. -> DONE
+
+3) Création d'un système de mort.
+
+4) Création d'un système d'attaque de zombie (sans les créer). 
+
+# 5. Création d'un système d'affichage dynamique via Tkinter.
+
+1) Création des fonctions d'affiches avec des boutons.
 
 
 
