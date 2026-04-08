@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 # probas metiers
 
@@ -521,18 +522,37 @@ def k_means(civilisation, k=16, max_iter=100):
         for person in clusters_membres[i]:
             person[IS_IN_GROUPE] = i+1
 
-def update_ressources(civilisation):
+ressources_memoire = {}
+
+def update_ressources(civilisation, ressources_memoire):
     groupes = group_info(civilisation)
 
     produce_eau = PRODUCE_EAU
     produce_agr = PRODUCE_AGR
 
     for groupe in groupes:
-        groupe[RESSOURCES]["Eau"] -= len(groupe[LISTE_IND])
-        groupe[RESSOURCES]["Agriculture"] -= len(groupe[LISTE_IND])
+        gid = groupe[ID_GROUPE]
+        taille = len(groupe[LISTE_IND])
 
-        groupe[RESSOURCES]["Eau"] += np.floor(len(groupe[LISTE_IND]) * groupe[CAPACITES]["Eau"]) * produce_eau
-        groupe[RESSOURCES]["Agriculture"] += np.floor(len(groupe[LISTE_IND]) * groupe[CAPACITES]["Agriculteur"]) * produce_agr
-    
-    
-        
+        if gid not in ressources_memoire:
+            ressources_memoire[gid] = {
+                "Eau": 20,
+                "Agriculture": 20
+            }
+
+        eau = ressources_memoire[gid]["Eau"]
+        agr = ressources_memoire[gid]["Agriculture"]
+
+        eau -= taille
+        agr -= taille
+
+        eau += int(taille * groupe[CAPACITES]["Eau"]) * produce_eau
+        agr += int(taille * groupe[CAPACITES]["Agriculteur"]) * produce_agr
+
+        ressources_memoire[gid]["Eau"] = eau
+        ressources_memoire[gid]["Agriculture"] = agr
+
+    return groupes
+
+def get_ressources_by_id(gid, ressources_memoire):
+    return ressources_memoire.get(gid, None)
