@@ -19,6 +19,8 @@ ROLE = 3
 COORD = 4
 DANGER = 5
 IS_IN_GROUPE = 6
+PRODUCE_EAU = 2.5
+PRODUCE_AGR = 2.5
 
 #proprietes groupe
 
@@ -104,6 +106,11 @@ def get_next_coord(coord_libres):
     return coord_libres.pop()
 
 def get_dict_groupes(civilisation):
+    """
+    Fonction qui prend en argument la civilisation et renvoi le dictionnaire des personnes 
+    (leurs ID) selon le groupe auquel ils appartiennent.
+    """
+
     dict_groupes = {}
 
     for personne in civilisation:
@@ -115,12 +122,31 @@ def get_dict_groupes(civilisation):
     return dict_groupes
 
 def find_person(id, civilisaion):
+    """
+    Fonction prend en argument ID de la personne recherchee et la civilisation.
+    Fonction renvoie la personne avec ID cherche ou -1 si une telle personne existe pas dans la civilisation.
+    """
+
     for p in civilisaion:
         if p[ID] == id:
             return p
     return -1
 
 def group_capacity(group, civilisation):
+    """
+    Fonction prend en argument un groupe des individus et la civilisation.
+    Fonction retourne le dictionnaire decrivant les capacites d'un groupe. 
+    Chaque capacite = proportion des gens ayant un metier (soldat, medecin etc.) sur le nb total des gens dans le groupe.
+
+    Exemple:
+
+    {"Soldat" : 0.5, "Agriculteur" : 0, "Medecin" : 0.25, "Eau" : 0}
+
+    /!\ la somme des coefficients n'est pas forcement egale a 1, les gens peuvent avoir pour role "reste" ce qui n'est pas
+    represente dans le dictionnaire /!\ 
+
+    """
+
     capacity = {"Soldat" : 0, "Agriculteur" : 0, "Medecin" : 0, "Eau" : 0}
     nb_people = len(group)
 
@@ -139,6 +165,11 @@ def group_capacity(group, civilisation):
 
     
 def mean_group_danger(group, civilisation):
+    """
+    Fonction prend an argument le groupe et la civilisation.
+    Renvoie le danger moyen de groupe en faisant la moyenne des danger de chaque personne dans le groupe.
+    """
+
     nb_people = len(group)
     danger = 0
 
@@ -154,6 +185,19 @@ def mean_group_danger(group, civilisation):
 
 
 def group_info(civilisation):
+    """
+    Fonction qui prend en argument la civilisation.
+    Renvoie une liste de des informations sur les groupes de la civilisation sous la forme d'une liste.
+
+    Chaque groupe est une liste de 6 argument différents.
+    /!\ Par défaut IS_IN_GROUPE = -1 /!\ 
+
+    [ID_GROUPE, LISTE_IND, CAOACITES, DANGER_GROUPE, ETAT, RESSOURCES]
+
+    Exemple : 
+
+    [15, {0, 33}, {'Soldat': 0.0, 'Agriculteur': 0.5, 'Medecin': 0.0, 'Eau': 0.5}, 0.21, 'Alive', {'Eau': 20, 'Agriculture': 20, 'Soldat': 0.0, 'Medecin': 1.0}] """
+
     dict_groupes = get_dict_groupes(civilisation)
     liste_groupes = []
 
@@ -180,6 +224,13 @@ def group_info(civilisation):
 
 
 def assign_role_to_reste(civilisation):
+    """
+    Fonction prend en argument la civilisation.
+    Elle renvoie rien, la fonction recupere les groupes et les eventuelement modifie si:
+
+    Il existe un ou plusieurs groupes 
+    """
+
     groupes = group_info(civilisation)
 
     for groupe in groupes:
@@ -473,8 +524,8 @@ def k_means(civilisation, k=16, max_iter=100):
 def update_ressources(civilisation):
     groupes = group_info(civilisation)
 
-    produce_eau = 2.5
-    produce_agr = 2.5
+    produce_eau = PRODUCE_EAU
+    produce_agr = PRODUCE_AGR
 
     for groupe in groupes:
         groupe[RESSOURCES]["Eau"] -= len(groupe[LISTE_IND])

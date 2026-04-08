@@ -201,10 +201,12 @@ def initialisation(civilisation):
     deplacer_individus(civilisation)
     k_means(civilisation)
     assign_role_to_reste(civilisation)
-    debug_groupes(civilisation)
+    # debug_groupes(civilisation)
     plot_civilisation_role(civilisation)
     plot_civilisation_groupe(civilisation)
 
 test = Generation_personnes(160)
 initialisation(test)
 
+print(group_info(test)
+)
