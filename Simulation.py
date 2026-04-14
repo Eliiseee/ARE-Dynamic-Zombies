@@ -120,6 +120,10 @@ class SimulationApp:
 
         assign_role_to_reste(self.civilisation)
         groupes = update_ressources(self.civilisation, self.ressources_memoire)
+        deplacer_individus(self.civilisation)
+
+        assign_role_to_reste(self.civilisation)
+        groupes = update_ressources(self.civilisation, self.ressources_memoire)
 
         # Historique
         total_eau = sum(self.ressources_memoire[g[ID_GROUPE]]["Eau"] for g in groupes)
