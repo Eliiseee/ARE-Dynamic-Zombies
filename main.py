@@ -112,15 +112,31 @@ def get_dict_groupes(civilisation):
     (leurs ID) selon le groupe auquel ils appartiennent.
     """
 
-    dict_groupes = {}
+    dict_groupe = dict()
 
     for personne in civilisation:
         id = personne[IS_IN_GROUPE]
-        if id not in dict_groupes:
-            dict_groupes[id] = set()
-        dict_groupes[id].add(personne[ID])
+        if id not in dict_groupe:
+            dict_groupe[id] = set()
+        dict_groupe[id].add(personne[ID])
     
-    return dict_groupes
+    return dict_groupe
+
+def dict_groupes(civilisation):
+    """
+    Fonction qui prend en argument la civilisation et renvoi le dictionnaire des personnes 
+    (leurs ID) selon le groupe auquel ils appartiennent.
+    """
+
+    dict_groupe = dict()
+
+    for personne in civilisation:
+        id = personne[IS_IN_GROUPE]
+        if id not in dict_groupe:
+            dict_groupe[id] = set()
+        dict_groupe[id].add(personne)
+    
+    return dict_groupe
 
 def find_person(id, civilisaion):
     """
@@ -556,3 +572,19 @@ def update_ressources(civilisation, ressources_memoire):
 
 def get_ressources_by_id(gid, ressources_memoire):
     return ressources_memoire.get(gid, None)
+
+def choisir_groupes_deplacement(groupe, civilisation):
+    lst_groupe_id = []
+    groupes = dict_groupes(civilisation)
+
+    somme_x = sum(p[COORD][0] for p in groupe)
+    somme_y = sum(p[COORD][1] for p in groupe)
+    n = len(groupe[LISTE_IND])
+
+    centre_groupe = (somme_x / n, somme_y / n)
+
+    for id,gr in groupes.items():
+        for p in gr:
+            dist = distance_euclidienne(centre_groupe, p[COORD])
+            print(dist, id)
+

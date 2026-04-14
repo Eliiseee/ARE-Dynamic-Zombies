@@ -204,17 +204,17 @@ def plot_civilisation_groupe(civilisation):
     plt.show()
 
 def initialisation(civilisation):
-    plot_civilisation_role(civilisation)
-    plot_civilisation_groupe(civilisation)
+    # plot_civilisation_role(civilisation)
+    # plot_civilisation_groupe(civilisation)
     segregation(civilisation)
     deplacer_individus(civilisation)
     k_means(civilisation)
     assign_role_to_reste(civilisation)
 
-    debug_groupes(civilisation)
-    afficher_population(civilisation)
-    plot_civilisation_role(civilisation)
-    plot_civilisation_groupe(civilisation)
+    # debug_groupes(civilisation)
+    # afficher_population(civilisation)
+    # plot_civilisation_role(civilisation)
+    # plot_civilisation_groupe(civilisation)
 
     return(civilisation)
 
@@ -224,14 +224,18 @@ def simulation():
     test = Generation_personnes(160)
     init = initialisation(test) 
 
-    for t in range(10):
-        print('Jour :', t)
-        update_ressources(init, ressources_memoire)
+    groupes = dict_groupes(test)
+    choisir_groupes_deplacement(groupes[0],test)
 
-        groupes = get_dict_groupes(init)
 
-        for gid, membres in groupes.items():
-            ressources = get_ressources_by_id(gid, ressources_memoire)
-            print(f"Groupe {gid} :", ressources)
+    # for t in range(10):
+    #     print('Jour :', t)
+    #     update_ressources(init, ressources_memoire)
+
+    #     groupes = get_dict_groupes(init)
+
+    #     for gid, membres in groupes.items():
+    #         ressources = get_ressources_by_id(gid, ressources_memoire)
+    #         print(f"Groupe {gid} :", ressources)
 
 simulation()
