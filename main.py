@@ -133,8 +133,8 @@ def dict_groupes(civilisation):
     for personne in civilisation:
         id = personne[IS_IN_GROUPE]
         if id not in dict_groupe:
-            dict_groupe[id] = set()
-        dict_groupe[id].add(personne)
+            dict_groupe[id] = []
+        dict_groupe[id].append(personne)
     
     return dict_groupe
 
@@ -582,9 +582,58 @@ def choisir_groupes_deplacement(groupe, civilisation):
     n = len(groupe[LISTE_IND])
 
     centre_groupe = (somme_x / n, somme_y / n)
+    dist_list = []
+    id_dist = []
 
     for id,gr in groupes.items():
+        moy_groupe = 0
         for p in gr:
-            dist = distance_euclidienne(centre_groupe, p[COORD])
-            print(dist, id)
+            moy_groupe+= distance_euclidienne(centre_groupe, p[COORD])
+        moy_groupe /= len(gr)
+        dist_list.append(moy_groupe)
+        id_dist.append([id, moy_groupe])
+
+    
+    for _ in range(4):
+        min = np.argmin(dist_list)
+        lst_groupe_id.append(id_dist[min][0])
+        del dist_list[min]
+    
+    return lst_groupe_id
+
+def melange_groupes(civilisation):
+    groupes = dict_groupes(civilisation)
+
+    for gr_id, gr in groupes.items():
+        lst_id = choisir_groupes_deplacement(gr, civilisation)
+        for id in lst_id:
+            gr1 = gr
+            gr2 = groupes[id]
+            nb = min(len(gr1), len(gr2))//4
+
+            for _ in range(nb):
+                pers1 = random.choice(gr1)
+                pers2 = random.choice(gr2)
+
+                temp_coord = pers1[COORD] 
+                temp_id = pers1[IS_IN_GROUPE]
+
+                gr1.remove(pers1)
+
+                pers1[COORD] = pers2[COORD]
+                pers1[IS_IN_GROUPE] = pers2[IS_IN_GROUPE]
+
+                gr2.remove(pers2)
+
+                pers2[COORD] = temp_coord 
+                pers2[IS_IN_GROUPE] = temp_id 
+
+
+
+
+
+        
+        
+
+            
 
