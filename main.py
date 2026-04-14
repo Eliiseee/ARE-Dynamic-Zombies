@@ -122,13 +122,13 @@ def get_dict_groupes(civilisation):
     
     return dict_groupes
 
-def find_person(id, civilisaion):
+def find_person(id, civilisation):
     """
     Fonction prend en argument ID de la personne recherchee et la civilisation.
     Fonction renvoie la personne avec ID cherche ou -1 si une telle personne existe pas dans la civilisation.
     """
 
-    for p in civilisaion:
+    for p in civilisation:
         if p[ID] == id:
             return p
     return -1
