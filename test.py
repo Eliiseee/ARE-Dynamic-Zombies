@@ -229,7 +229,6 @@ def simulation():
     test = Generation_personnes(160)
     init = initialisation(test) 
 
-
     for t in range(10):
         print('Jour :', t)
         update_ressources(init, ressources_memoire)

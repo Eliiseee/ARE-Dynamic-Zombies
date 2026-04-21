@@ -39,6 +39,10 @@ THRESHOLD = 0.35
 LARGEUR = 22
 LONGUEUR = 22
 
+#zombies
+START = 0.1
+END = 0.3
+
 
 def get_role():
     """
@@ -178,6 +182,8 @@ def group_capacity(group, civilisation):
         if role != "Reste":
             capacity[role] += 1
     
+    if nb_people == 0: return capacity
+    
     return { key:(round_2(val/nb_people)) for key,val in capacity.items()}
 
     
@@ -230,8 +236,8 @@ def group_info(civilisation):
         groupe[RESSOURCES] = {
             "Eau" : 20, 
             "Agriculture" : 20, 
-            "Soldat" : len(groupe) * groupe[CAPACITES]["Soldat"], 
-            "Medecin" : len(groupe) * groupe[CAPACITES]["Medecin"]
+            "Soldat" : len(val) * groupe[CAPACITES]["Soldat"], 
+            "Medecin" : len(val) * groupe[CAPACITES]["Medecin"]
         }
     
         liste_groupes.append(groupe)
@@ -579,7 +585,7 @@ def choisir_groupes_deplacement(groupe, civilisation):
 
     somme_x = sum(p[COORD][0] for p in groupe)
     somme_y = sum(p[COORD][1] for p in groupe)
-    n = len(groupe[LISTE_IND])
+    n = len(groupe)
 
     centre_groupe = (somme_x / n, somme_y / n)
     dist_list = []
@@ -595,45 +601,88 @@ def choisir_groupes_deplacement(groupe, civilisation):
 
     
     for _ in range(4):
-        min = np.argmin(dist_list)
-        lst_groupe_id.append(id_dist[min][0])
-        del dist_list[min]
+        min_ind= np.argmin(dist_list)
+        lst_groupe_id.append(id_dist[min_ind][0])
+        del dist_list[min_ind]
     
     return lst_groupe_id
 
 def melange_groupes(civilisation):
     groupes = dict_groupes(civilisation)
 
-    for gr_id, gr in groupes.items():
-        lst_id = choisir_groupes_deplacement(gr, civilisation)
-        for id in lst_id:
-            gr1 = gr
-            gr2 = groupes[id]
-            nb = min(len(gr1), len(gr2))//4
+    for gr_id in list(groupes.keys()):
+        groupes = dict_groupes(civilisation)
+        gr1 = groupes[gr_id]
+
+        lst_id = choisir_groupes_deplacement(gr1, civilisation)
+
+        for other_id in lst_id:
+            groupes = dict_groupes(civilisation)
+            gr1 = groupes.get(gr_id, [])
+            gr2 = groupes.get(other_id, [])
+
+            if not gr1 or not gr2:
+                continue
+
+            nb = min(len(gr1), len(gr2)) // 4
 
             for _ in range(nb):
                 pers1 = random.choice(gr1)
                 pers2 = random.choice(gr2)
 
-                temp_coord = pers1[COORD] 
-                temp_id = pers1[IS_IN_GROUPE]
+                pers1[COORD], pers2[COORD] = pers2[COORD], pers1[COORD]
 
-                gr1.remove(pers1)
-
-                pers1[COORD] = pers2[COORD]
-                pers1[IS_IN_GROUPE] = pers2[IS_IN_GROUPE]
-
-                gr2.remove(pers2)
-
-                pers2[COORD] = temp_coord 
-                pers2[IS_IN_GROUPE] = temp_id 
+                pers1[IS_IN_GROUPE], pers2[IS_IN_GROUPE] = pers2[IS_IN_GROUPE], pers1[IS_IN_GROUPE]
 
 
+def update_state_groupe(civilisation, ressources_memoire):
+    groupes = group_info(civilisation)
+    dictio = dict_groupes(civilisation)
 
+    for gr in groupes:
+        gid = gr[ID_GROUPE]
+        ressources = ressources_memoire.get(gid)
 
+        if ressources is None:
+            continue
 
+        if (ressources["Agriculture"] <= 0 or 
+            ressources["Eau"] <= 0 or 
+            all(p[IS_IN_GROUPE] == -100 for p in dictio[gid])):
+
+            gr[ETAT] = "Dead"
+
+            id = random.choice(list(gr[LISTE_IND]))
+            pers = find_person(id, civilisation)
+            pers[IS_IN_GROUPE] = -100
         
-        
+        else:
+            gr[ETAT] = "Alive"
 
-            
+    
 
+def attack_zombie(civilisation):
+    groupes_info = group_info(civilisation)
+    if not groupes_info:
+        return
+
+    groupe = random.choice(groupes_info)
+    personnes = dict_groupes(civilisation)[groupe[ID_GROUPE]]
+
+    nb_ind = len(personnes)
+    nb_zombie = int(np.random.uniform(START, END) * nb_ind)
+
+    nb_soldat = int(groupe[CAPACITES]["Soldat"] * nb_ind)
+    nb_doct = int(groupe[CAPACITES]["Medecin"] * nb_ind)
+
+    if nb_soldat < nb_zombie:
+        nb_blesse = nb_zombie - nb_soldat
+
+        if nb_doct < nb_blesse:
+            nb_morts = int(nb_blesse - nb_doct)
+            morts = random.sample(personnes, min(nb_morts, len(personnes)))
+
+            for pers in morts:
+                civilisation.remove(pers)
+                
+                
