@@ -645,7 +645,7 @@ def melange_groupes(civilisation):
             if not gr1 or not gr2:
                 continue
 
-            nb = min(len(gr1), len(gr2)) // 4
+            nb = min(len(gr1), len(gr2)) // 8 #Changement ici, 25% du groupe était trop grand
 
             for _ in range(nb):
                 pers1 = random.choice(gr1)

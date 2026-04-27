@@ -14,6 +14,7 @@ class SimulationApp:
         self.root.title("Meilleur projet d'ARE au monde")
 
         self.civilisation = []
+        self.groupes_actuels = []
         self.ressources_memoire = {}
         self.running = False
         self.mode = "role"
@@ -23,6 +24,11 @@ class SimulationApp:
         self.historique_agri = []
         self.historique_soldats = []
         self.historique_medecins = []
+        self.historique_agriculteurs = []
+        self.historique_eaux = []
+
+        self.group_colors = {}
+        self.cmap = plt.get_cmap('tab20b')  
 
         # ---------------- LAYOUT PRINCIPAL ----------------
         main_frame = ttk.Frame(root)
@@ -65,6 +71,7 @@ class SimulationApp:
         self.fig_grid, self.ax_grid = plt.subplots(figsize=(6,6))
         self.canvas_grid = FigureCanvasTkAgg(self.fig_grid, master=left_frame)
         self.canvas_grid.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        self.canvas_grid.mpl_connect("button_press_event", self.on_click)
 
         # Graphique ressources
         self.fig_ressources, (self.ax_ressources, self.ax_roles) = plt.subplots(2, 1, figsize=(6,6))
@@ -79,6 +86,77 @@ class SimulationApp:
         self.running = False
         self.root.destroy()
 
+    def get_group_color(self, gid):
+        if gid not in self.group_colors:
+            index = len(self.group_colors)
+            self.group_colors[gid] = self.cmap(index % self.cmap.N)
+        return self.group_colors[gid]
+    
+    def on_click(self, event):
+        if event.xdata is None or event.ydata is None:
+            return
+
+        x = int(event.xdata)
+        y = int(event.ydata)
+
+        for p in self.civilisation:
+            px, py = p[COORD]
+            if px == x and py == y:
+                gid = p[IS_IN_GROUPE]
+                self.display_group_info(gid)
+                return
+            
+    def display_group_info(self, gid):
+        self.text.delete("1.0", tk.END)
+
+        groupes = self.groupes_actuels
+
+        groupe = next((g for g in groupes if g[ID_GROUPE] == gid), None)
+
+        if not groupe:
+            self.text.insert(tk.END, f"Groupe {gid} introuvable\n")
+            return
+
+        individus_ids = set(groupe[LISTE_IND])
+
+        personnes = [
+            p for p in self.civilisation
+            if p[ID] in individus_ids
+        ]
+
+        res = self.ressources_memoire.get(gid, {})
+
+        roles_count = {
+            "Soldat": 0,
+            "Medecin": 0,
+            "Agriculteur": 0,
+            "Eau": 0,
+            "Reste": 0
+        }
+
+        for p in personnes:
+            role = p[ROLE]
+            if role in roles_count:
+                roles_count[role] += 1
+            else:
+                roles_count["Reste"] += 1
+
+        # ---------------- AFFICHAGE ----------------
+        self.text.insert(tk.END, f"=== GROUPE {gid} ===\n\n")
+        self.text.insert(tk.END, f"Taille : {len(personnes)}\n\n")
+
+        self.text.insert(tk.END, "Ressources :\n")
+        self.text.insert(tk.END, f"  Eau : {res.get('Eau', 0)}\n")
+        self.text.insert(tk.END, f"  Agriculture : {res.get('Agriculture', 0)}\n\n")
+
+        self.text.insert(tk.END, "Rôles :\n")
+        for role, count in roles_count.items():
+            self.text.insert(tk.END, f"  {role} : {count}\n")
+
+        self.text.insert(tk.END, "\nIndividus (aperçu) :\n")
+        for p in personnes:
+            self.text.insert(tk.END, f"  - {p[ROLE]}\n")
+
     # ---------------- INIT ----------------
     def init_sim_schelling(self):
         self._init_base()
@@ -86,28 +164,37 @@ class SimulationApp:
         deplacer_individus(self.civilisation)
         k_means(self.civilisation)
         assign_role_to_reste(self.civilisation)
+        groupes = update_ressources(self.civilisation, self.ressources_memoire)
+        self.groupes_actuels = groupes
         self.draw()
         self.update_graph()
+        
 
     def init_sim_optimise(self):
         self._init_base()
         groupement(self.civilisation)
         assign_role_to_reste(self.civilisation)
+        groupes = update_ressources(self.civilisation, self.ressources_memoire)
+        self.groupes_actuels = groupes
         self.draw()
         self.update_graph()
 
     def _init_base(self):
         self.civilisation = Generation_personnes(160)
         self.ressources_memoire = {}
+        self.groupes_actuels = None
         self.historique_eau.clear()
         self.historique_agri.clear()
         self.historique_soldats.clear()
         self.historique_medecins.clear()
+        self.historique_agriculteurs.clear()
+        self.historique_eaux.clear()
         self.jour = 0
         self.label_jour.config(text=f"Jour : {self.jour}")
         self.text.delete("1.0", tk.END)
         self.ax_grid.clear()
         self.canvas_grid.draw()
+        self.group_colors.clear()
         self.ax_ressources.clear()
         self.ax_roles.clear()
         self.canvas_ressources.draw()
@@ -117,12 +204,10 @@ class SimulationApp:
     def step(self):
         if not self.civilisation:
             return
-
-        assign_role_to_reste(self.civilisation)
-        groupes = update_ressources(self.civilisation, self.ressources_memoire)
         
         assign_role_to_reste(self.civilisation)
         groupes = update_ressources(self.civilisation, self.ressources_memoire)
+        self.groupes_actuels = groupes
 
         if self.jour % 5 == 0 :
             attack_zombie(self.civilisation)
@@ -135,14 +220,18 @@ class SimulationApp:
         # Historique
         total_eau = sum(self.ressources_memoire[g[ID_GROUPE]]["Eau"] for g in groupes)
         total_agri = sum(self.ressources_memoire[g[ID_GROUPE]]["Agriculture"] for g in groupes)
-        nb_soldats = sum(len(g[LISTE_IND])*g[CAPACITES]["Soldat"] for g in groupes)
-        nb_medecins = sum(len(g[LISTE_IND])*g[CAPACITES]["Medecin"] for g in groupes)
 
+        nb_soldats = sum(1 for p in self.civilisation if p[ROLE] == "Soldat")
+        nb_medecins = sum(1 for p in self.civilisation if p[ROLE] == "Medecin")
+        nb_agriculteurs = sum(1 for p in self.civilisation if p[ROLE] == "Agriculteur")
+        nb_eau = sum(1 for p in self.civilisation if p[ROLE] == "Eau")
         self.historique_eau.append(total_eau)
         self.historique_agri.append(total_agri)
+
         self.historique_soldats.append(nb_soldats)
         self.historique_medecins.append(nb_medecins)
-
+        self.historique_agriculteurs.append(nb_agriculteurs)
+        self.historique_eaux.append(nb_eau)
         self.jour += 1
         self.label_jour.config(text=f"Jour : {self.jour}")
 
@@ -190,10 +279,17 @@ class SimulationApp:
             legend_elements = [Patch(facecolor=color_map[i], label=role_labels[i]) for i in range(len(role_labels))]
             self.ax_grid.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.15, 1))
         else:
+            grid_rgb = np.zeros((LONGUEUR, LARGEUR, 3))
+
             for p in self.civilisation:
                 x, y = p[COORD]
-                grid[y][x] = p[IS_IN_GROUPE]
-            self.ax_grid.imshow(grid)
+                gid = p[IS_IN_GROUPE]
+
+                if 0 <= x < LARGEUR and 0 <= y < LONGUEUR:
+                    color = self.get_group_color(gid)
+                    grid_rgb[y][x] = color[:3]
+
+            self.ax_grid.imshow(grid_rgb)
             self.ax_grid.set_title("Mode : Groupes")
 
         self.canvas_grid.draw()
@@ -201,9 +297,13 @@ class SimulationApp:
     # ---------------- TEXTE ----------------
     def update_text(self, groupes):
         self.text.delete("1.0", tk.END)
-        for g in groupes:
+
+        groupes_tries = sorted(groupes, key=lambda g: g[ID_GROUPE])
+
+        for g in groupes_tries:
             gid = g[ID_GROUPE]
             res = self.ressources_memoire.get(gid, {})
+
             self.text.insert(tk.END, f"Groupe {gid}\n")
             self.text.insert(tk.END, f"  Taille : {len(g[LISTE_IND])}\n")
             self.text.insert(tk.END, f"  Eau : {res.get('Eau',0)}\n")
@@ -216,7 +316,7 @@ class SimulationApp:
 
         # Graphique Eau / Agriculture
         self.ax_ressources.clear()
-        self.ax_ressources.plot(jours, self.historique_eau, label="Eau", color="blue")
+        self.ax_ressources.plot(jours, self.historique_eau, label="Eau", color="cyan")
         self.ax_ressources.plot(jours, self.historique_agri, label="Agriculture", color="green")
         self.ax_ressources.set_xlabel("Jour")
         self.ax_ressources.set_ylabel("Quantité")
@@ -227,6 +327,8 @@ class SimulationApp:
         self.ax_roles.clear()
         self.ax_roles.plot(jours, self.historique_soldats, label="Soldats", color="red")
         self.ax_roles.plot(jours, self.historique_medecins, label="Médecins", color="blue")
+        self.ax_roles.plot(jours, self.historique_agriculteurs, label="Agriculteurs", color="green")
+        self.ax_roles.plot(jours, self.historique_eaux, label="Eau", color="cyan")
         self.ax_roles.set_xlabel("Jour")
         self.ax_roles.set_ylabel("Nombre")
         self.ax_roles.set_title("Historique rôles")
