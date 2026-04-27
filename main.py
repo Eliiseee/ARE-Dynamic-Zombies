@@ -20,8 +20,8 @@ ROLE = 3
 COORD = 4
 DANGER = 5
 IS_IN_GROUPE = 6
-PRODUCE_EAU = 2.5
-PRODUCE_AGR = 2.5
+PRODUCE_EAU = 3.5
+PRODUCE_AGR = 3.5
 
 #proprietes groupe
 
@@ -458,21 +458,38 @@ def free_slots(coord_map):
     return [(x,y) for x in range(LARGEUR) for y in range(LONGUEUR) if not (x,y) in coord_map]
 
 
-def segregation(civilisation, N = 300, n= 1, threshold = THRESHOLD):
-    
+def segregation(civilisation, N=300, n=1, threshold=THRESHOLD):
+
+    directions = [(x,y) for x in range(-n,n+1) for y in range(-n,n+1) if not (x == 0 and y == 0)]
+
     for _ in range(N):
-        list_unhappy =  iteration_segregation(civilisation, threshold, n)
-        directions = [(x,y) for x in range(-n,n+1) for y in range (-n, n+1) if not (x == 0 and y == 0)]
-        coord_map = {p[COORD]: p for p in civilisation}
+        coord_map = {p[COORD]: p for p in civilisation if p[IS_ALIVE]}
         free_spots = free_slots(coord_map)
+
+        if not free_spots:
+            break 
+
+        list_unhappy = iteration_segregation(civilisation, threshold, n)
 
         for pers in list_unhappy:
 
-            coord = pers[COORD]
-            while not is_happy_at(pers, coord, coord_map, directions, threshold):
-                coord = random.choice(free_spots)
-                coord_map = {p[COORD]: p for p in civilisation}
-            pers[COORD] = coord
+            moved = False
+
+            for _ in range(50):
+                new_coord = random.choice(free_spots)
+
+                if is_happy_at(pers, new_coord, coord_map, directions, threshold):
+                    old_coord = pers[COORD]
+                    pers[COORD] = new_coord
+
+                    coord_map.pop(old_coord, None)
+                    coord_map[new_coord] = pers
+
+                    free_spots.remove(new_coord)
+                    free_spots.append(old_coord)
+
+                    moved = True
+                    break
 
 def deplacer_individus(civilisation, threshold=0.5, n=2):
     """
@@ -558,21 +575,25 @@ def update_ressources(civilisation, ressources_memoire):
 
         if gid not in ressources_memoire:
             ressources_memoire[gid] = {
-                "Eau": 20,
-                "Agriculture": 20
+                "Eau": 50,
+                "Agriculture": 50
             }
 
         eau = ressources_memoire[gid]["Eau"]
         agr = ressources_memoire[gid]["Agriculture"]
-
-        eau -= taille
-        agr -= taille
+    
+        if eau > 0:
+            eau -= taille
+        if agr > 0:
+            agr -= taille
 
         eau += int(taille * groupe[CAPACITES]["Eau"]) * produce_eau
         agr += int(taille * groupe[CAPACITES]["Agriculteur"]) * produce_agr
 
         ressources_memoire[gid]["Eau"] = eau
         ressources_memoire[gid]["Agriculture"] = agr
+
+    update_state_groupe(civilisation, ressources_memoire)
 
     return groupes
 
@@ -646,16 +667,21 @@ def update_state_groupe(civilisation, ressources_memoire):
         if ressources is None:
             continue
 
-        if (ressources["Agriculture"] <= 0 or 
-            ressources["Eau"] <= 0 or 
-            all(p[IS_IN_GROUPE] == -100 for p in dictio[gid])):
+        manque = (ressources["Agriculture"] <= 0 or ressources["Eau"] <= 0)
 
+        if manque:
+            membres = dictio.get(gid, [])
+
+            if membres:
+                victime = random.choice(membres)
+
+                civilisation.remove(victime)
+
+        # Etat du groupe
+        membres_restants = [p for p in dictio.get(gid, []) if p[IS_ALIVE]]
+
+        if not membres_restants:
             gr[ETAT] = "Dead"
-
-            id = random.choice(list(gr[LISTE_IND]))
-            pers = find_person(id, civilisation)
-            pers[IS_IN_GROUPE] = -100
-        
         else:
             gr[ETAT] = "Alive"
 
@@ -684,5 +710,12 @@ def attack_zombie(civilisation):
 
             for pers in morts:
                 civilisation.remove(pers)
-                
+
+def est_premier(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
                 

@@ -6,11 +6,11 @@
 
 # 0. Liste de chose à faire pour la prochaine fois:
 
-  1) Création d'une fonction de déplacement d'un individus. (échanger 1/4 de la population d'un groupe avec un autre en choisissant aléatoirement une direction (Nord, Sud, Est, Ouest))
+  1) Création d'une fonction de déplacement d'un individus. (échanger 1/4 de la population d'un groupe avec un autre en choisissant aléatoirement une direction (Nord, Sud, Est, Ouest)). -> DONE
  
   2) Création d'une fonction qui permet de rassembler géographiquement tous les individus d'un groupe entre eux. -> DONE
 
-  3) Création d'un système d'attaque et de zombie.
+  3) Création d'un système d'attaque et de zombie. -> DONE
 
   4) Création de fonctions d'affichage via numpy. -> DONE
 
@@ -70,7 +70,9 @@ La fonction prendra en argument un nombre d'individus et renvoie une liste avec 
 
 1) Bien choisir les différentes variables afin d'avoir une simulation logique.
 
-2) Nous noterons ici les différents jeu de variables choisis.
+2) Nous noterons ici les différents jeu de variables choisis. -> DONE 
+
+Remarque : On remarque qu'initialiser une production à 3.3 d'eau et d'agriculture permet d'avoir une stabilité de production. En dessous on est dans une famine et au dessus on est en surproduction.
 
 
 

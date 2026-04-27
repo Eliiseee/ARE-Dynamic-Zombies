@@ -120,12 +120,17 @@ class SimulationApp:
 
         assign_role_to_reste(self.civilisation)
         groupes = update_ressources(self.civilisation, self.ressources_memoire)
-        deplacer_individus(self.civilisation)
-        groupement(self.civilisation)
-        fusionner_groupes_proches_n(self.civilisation)
-
+        
         assign_role_to_reste(self.civilisation)
         groupes = update_ressources(self.civilisation, self.ressources_memoire)
+
+        if self.jour % 5 == 0 :
+            attack_zombie(self.civilisation)
+            update_state_groupe(self.civilisation, self.ressources_memoire)
+
+        if est_premier(self.jour):
+            melange_groupes(self.civilisation)
+
 
         # Historique
         total_eau = sum(self.ressources_memoire[g[ID_GROUPE]]["Eau"] for g in groupes)
