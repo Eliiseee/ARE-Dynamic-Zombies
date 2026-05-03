@@ -20,6 +20,7 @@ ROLE = 3
 COORD = 4
 DANGER = 5
 IS_IN_GROUPE = 6
+
 PRODUCE_EAU = 3.5
 PRODUCE_AGR = 3.5
 
@@ -33,6 +34,7 @@ ETAT = 4
 RESSOURCES = 5
 
 THRESHOLD = 0.35
+DEPLACEMENT = 8
 
 # autres constantes
 
@@ -331,7 +333,7 @@ def comptage_groupe(civilisation):
     return compte
     
 
-def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_groupes = 3):
+def fusionner_groupes_proches_n(civilisation, n = 2, limite = 15, seuil_petits_groupes = 2):
     """
     Fonction qui prend forcément en argument une civilisation
     Fonction qui permet de rassembler plusieurs petits groupes afin d'en créer un plus gros.
@@ -603,6 +605,8 @@ def get_ressources_by_id(gid, ressources_memoire):
 def choisir_groupes_deplacement(groupe, civilisation):
     lst_groupe_id = []
     groupes = dict_groupes(civilisation)
+    if len(groupes) < 4:
+        return lst_groupe_id
 
     somme_x = sum(p[COORD][0] for p in groupe)
     somme_y = sum(p[COORD][1] for p in groupe)
@@ -630,6 +634,8 @@ def choisir_groupes_deplacement(groupe, civilisation):
 
 def melange_groupes(civilisation):
     groupes = dict_groupes(civilisation)
+    if len (groupes) < 4:
+        return
 
     for gr_id in list(groupes.keys()):
         groupes = dict_groupes(civilisation)
@@ -645,7 +651,7 @@ def melange_groupes(civilisation):
             if not gr1 or not gr2:
                 continue
 
-            nb = min(len(gr1), len(gr2)) // 8 #Changement ici, 25% du groupe était trop grand
+            nb = min(len(gr1), len(gr2)) // DEPLACEMENT #Changement ici, 25% du groupe était trop grand
 
             for _ in range(nb):
                 pers1 = random.choice(gr1)
@@ -701,11 +707,11 @@ def attack_zombie(civilisation):
     nb_soldat = int(groupe[CAPACITES]["Soldat"] * nb_ind)
     nb_doct = int(groupe[CAPACITES]["Medecin"] * nb_ind)
 
-    if nb_soldat < nb_zombie:
+    if nb_soldat <= nb_zombie:
         nb_blesse = nb_zombie - nb_soldat
 
-        if nb_doct < nb_blesse:
-            nb_morts = int(nb_blesse - nb_doct)
+        if nb_doct <= nb_blesse:
+            nb_morts = int(nb_blesse - nb_doct + 1)
             morts = random.sample(personnes, min(nb_morts, len(personnes)))
 
             for pers in morts:

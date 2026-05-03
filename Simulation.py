@@ -48,7 +48,7 @@ class SimulationApp:
         ttk.Button(control_frame, text="Reset", command=self.reset_simulation).pack(side=tk.LEFT, padx=5)
         ttk.Button(control_frame, text="Kill", command=self.kill_tkinter).pack(side=tk.LEFT, padx=5)
 
-        self.speed = tk.Scale(control_frame, from_=100, to=3000, orient="horizontal", label="Vitesse (ms)")
+        self.speed = tk.Scale(control_frame, from_=10, to=3000, orient="horizontal", label="Vitesse (ms)")
         self.speed.set(1000)
         self.speed.pack(side=tk.RIGHT, padx=10)
 
